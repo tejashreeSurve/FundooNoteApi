@@ -80,6 +80,12 @@ public class NoteController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 	
+	@GetMapping("/notes/noteBytitle")
+	public ResponseEntity<Response> sortByNotetitle(@RequestHeader String token) {
+		Response response = noteservice.sortByNotetitle(token);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+	
 	/****Reminder Api*****/
 
 	// Add reminder to note

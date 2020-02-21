@@ -12,9 +12,8 @@ import javax.persistence.Table;
 import org.springframework.stereotype.Component;
 
 /**
- * @author Tejashree Surve 
- * Purpose : This is Data Access Object class which is
- *         connect to DataBase Layer.
+ * @author Tejashree Surve
+ * @Purpose : This is Data Access Object class which is connect to DataBase Layer.
  */
 @Component
 @Entity
@@ -23,7 +22,7 @@ public class UserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;	
+	private int id;
 	private String firstname;
 	private String lastname;
 	private String birthdate;
@@ -32,8 +31,7 @@ public class UserEntity {
 	private String email;
 	private String userpassword;
 	private boolean isValidate;
-	
-	
+
 	@OneToMany(mappedBy = "userEntity")
 	private List<NoteEntity> noteEntity;
 
@@ -109,7 +107,6 @@ public class UserEntity {
 		this.isValidate = isValidate;
 	}
 
-	
 	public List<NoteEntity> getNoteEntity() {
 		return noteEntity;
 	}

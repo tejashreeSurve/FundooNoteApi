@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Tejashree Surve
- * Purpose : Contains Beans Definition so that spring IOC container can create object.
+ * @Purpose : Contains Beans Definition so that spring IOC container can create object.
  */
 @Configuration
 public class BasicConfiguration {

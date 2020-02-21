@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoonotesapi.services;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -200,6 +202,38 @@ public class NoteServiceImp implements INoteService {
 					environment.getProperty("note.isuntrash"), message.Note_UnTrash);
 		}
 	}
+
+	@Override
+	public Response sortAllNoteBytitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response sortByNotetitle(String token) {
+		String email = jwtOperation.getToken(token);
+		UserEntity user = userRepository.findByEmail(email);
+		List<NoteEntity> allNotedata = noteRepository.findAll();
+		if (user == null)
+			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
+					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		if (allNotedata == null)
+			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
+					environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		// this stream filter those notes which contains user id is equal to given token
+		List<NoteEntity> listOfNotes = allNotedata.stream()
+				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
+		List<NoteEntity> sortedList = listOfNotes.stream().sorted(listOfNotes.forEach()).collect(Collectors.toList());
+		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+				environment.getProperty("note.getallnotes"), sortedList);
+	}
+
+	@Override
+	public Response sortByNoteDate(String token) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 	
 }

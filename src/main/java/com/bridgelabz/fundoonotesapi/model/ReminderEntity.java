@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Tejashree Surve
- * Purpose : This is Entity Class for Reminder DataBase.
+ * @Purpose : This is Entity Class for Reminder DataBase.
  */
 @Entity
 @Component

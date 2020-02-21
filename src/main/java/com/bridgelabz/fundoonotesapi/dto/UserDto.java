@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotesapi.dto;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.springframework.lang.NonNull;
@@ -9,23 +10,23 @@ import org.springframework.lang.NonNull;
  * @Purpose : This is Data Transfer Object that holds Data for User Api.
  */
 public class UserDto {
-	@NonNull
+	@NotNull
 	private String firstname;
-	@NonNull
+	@NotNull
 	private String lastname;
-	@Pattern(regexp = "((([0]{1}[1-9]{1})|([1]{1}[0-9]{1})|([2]{1}[0-9]{1})|([3]{1}[0-1]{1}))/(([0]{1}[1-9]{1})|([1]{1}[0-2]{1}))/([1-9]{1}[0-9]{1}[0-9]{1}[1-9]{1}))",message = "Please Enter valide date")
+	@Pattern(regexp = "((([0]{1}[1-9]{1})|([1]{1}[0-9]{1})|([2]{1}[0-9]{1})|([3]{1}[0-1]{1}))/(([0]{1}[1-9]{1})|([1]{1}[0-2]{1}))/([1-9]{1}[0-9]{1}[0-9]{1}[1-9]{1}))", message = "Please Enter valide date")
 	private String birthdate;
-	@Pattern(regexp = "^\\d{10}",message ="Please Enter valide Phone-Number")
+	@Pattern(regexp = "^\\d{10}", message = "Please Enter valide Phone-Number")
 	private String phonenumber;
 	@NonNull
 	private String city;
-	@Pattern(regexp = "\"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@\"\n" + 
-			"+ \"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$\"",message = "Please Enter valide Email")
+	@Pattern(regexp = "\"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@\"\n"
+			+ "+ \"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$\"", message = "Please Enter valide Email")
 	private String email;
-	@Pattern(regexp = "(?=.*[0-9])" ,message = "Password must contain at least one numeric value")
+	@Pattern(regexp = "(?=.*[0-9])", message = "Password must contain at least one numeric value")
 	private String userpassword;
 	private boolean isValidate;
-	
+
 	public String getFirstname() {
 		return firstname;
 	}

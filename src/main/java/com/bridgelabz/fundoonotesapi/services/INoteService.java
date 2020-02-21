@@ -30,4 +30,10 @@ public interface INoteService {
 	// trash or un-trash note
 	Response trashOrUntrash(String token,int id);
 	
+	Response sortAllNoteBytitle();
+	
+	Response sortByNotetitle(String token);
+	
+	Response sortByNoteDate(String token);
+	
 }
