@@ -20,9 +20,11 @@ import com.bridgelabz.fundoonotesapi.repository.ReminderRepository;
 import com.bridgelabz.fundoonotesapi.repository.UserRepository;
 import com.bridgelabz.fundoonotesapi.response.Response;
 import com.bridgelabz.fundoonotesapi.utility.JwtToken;
+
 /**
  * @author Tejashree Surve
- * @Purpose : This is Service class for Reminder which contain logic for all Api's.
+ * @Purpose : This is Service class for Reminder which contain logic for all
+ *          Api's.
  */
 @Component
 @Service
@@ -85,7 +87,7 @@ public class ReminderServiceImp implements IReminderService {
 				environment.getProperty("note.notexist"), message.Note_Not_Exist);
 	}
 
-	// show all note which contain reminder 
+	// show all note which contain reminder
 	@Override
 	public Response getReminder(String token) {
 		String email = jwtOperation.getToken(token);
@@ -102,8 +104,8 @@ public class ReminderServiceImp implements IReminderService {
 		// this stream filter those notes which contains user id is equal to given token
 		List<NoteEntity> listOfNotes = allNotedata.stream()
 				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
-		List<NoteEntity> notesReminder = listOfNotes.stream()
-				.filter(reminder -> reminder.getReminderEntity() != null).collect(Collectors.toList());
+		List<NoteEntity> notesReminder = listOfNotes.stream().filter(reminder -> reminder.getReminderEntity() != null)
+				.collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("reminder.show"), notesReminder);
 	}
@@ -122,7 +124,7 @@ public class ReminderServiceImp implements IReminderService {
 		List<NoteEntity> listOfNotes = allNotedata.stream()
 				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
 		listOfNotes.stream().forEach(list -> System.out.println(list.getId()));
-		// check if note id is present in user note id 
+		// check if note id is present in user note id
 		for (int i = 0; i < listOfNotes.size(); i++) {
 			if (listOfNotes.get(i).getId() == noteid) {
 				NoteEntity noteData = noteRepository.findById(noteid);
@@ -160,7 +162,7 @@ public class ReminderServiceImp implements IReminderService {
 		if (listOfNotes == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
 					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-		// check if reminder is present or not 
+		// check if reminder is present or not
 		NoteEntity noteData = noteRepository.findById(noteid);
 		if (noteData.getReminderEntity() != null) {
 			ReminderEntity reminderData = noteData.getReminderEntity();
@@ -190,22 +192,22 @@ public class ReminderServiceImp implements IReminderService {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
 					environment.getProperty("note.notexist"), message.Note_Not_Exist);
 		NoteEntity noteData = noteRepository.findById(noteid);
-
 		ReminderEntity reminderData = noteData.getReminderEntity();
 		// check if reminder is present or not
 		if (reminderData == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 					environment.getProperty("reminder.isnotpresent"), message.Reminder_isNotPresent);
-		// check if reminder repeat is set or not 
+		// check if reminder repeat is set or not
 		if ((reminderData.isMonthly() == false) && (reminderData.isWeekly() == false)
-				&& (reminderData.isYearly() == false) && (reminderData.isDoNotRepeat() == false)) {
+				&& (reminderData.isYearly() == false)) {
 			reminderData.setDaily(true);
+			reminderData.setDoNotRepeat(false);
 			reminderRepository.save(reminderData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("reminder.set.daily"), token);
+					environment.getProperty("reminder.set.daily"), message.Reminder_SetToRepeat);
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("reminder.notset"), message.Note_Not_Exist);
+					environment.getProperty("reminder.notset"), message.Reminder_NotSet);
 		}
 	}
 
@@ -232,16 +234,17 @@ public class ReminderServiceImp implements IReminderService {
 		if (reminderData == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 					environment.getProperty("reminder.isnotpresent"), message.Reminder_isNotPresent);
-		// check if reminder repeat is set or not 
+		// check if reminder repeat is set or not
 		if ((reminderData.isMonthly() == false) && (reminderData.isDaily() == false)
-				&& (reminderData.isYearly() == false) && (reminderData.isDoNotRepeat() == false)) {
+				&& (reminderData.isYearly() == false)) {
 			reminderData.setWeekly(true);
+			reminderData.setDoNotRepeat(false);
 			reminderRepository.save(reminderData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("reminder.set.weekly"), token);
+					environment.getProperty("reminder.set.weekly"), message.Reminder_SetToRepeat);
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("reminder.notset"), token);
+					environment.getProperty("reminder.notset"), message.Reminder_NotSet);
 		}
 
 	}
@@ -268,16 +271,16 @@ public class ReminderServiceImp implements IReminderService {
 		if (reminderData == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 					environment.getProperty("reminder.isnotpresent"), message.Reminder_isNotPresent);
-		// check if reminder repeat is set or not 
+		// check if reminder repeat is set or not
 		if ((reminderData.isDaily() == false) && (reminderData.isWeekly() == false)
-				&& (reminderData.isYearly() == false) && (reminderData.isDoNotRepeat() == false)) {
+				&& (reminderData.isYearly() == false)) {
 			reminderData.setMonthly(true);
 			reminderRepository.save(reminderData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("reminder.set.monthly"), token);
+					environment.getProperty("reminder.set.monthly"), message.Reminder_SetToRepeat);
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("reminder.notset"), token);
+					environment.getProperty("reminder.notset"), message.Reminder_NotSet);
 		}
 	}
 
@@ -303,51 +306,17 @@ public class ReminderServiceImp implements IReminderService {
 		if (reminderData == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 					environment.getProperty("reminder.isnotpresent"), message.Reminder_isNotPresent);
-		// check if reminder repeat is set or not 
+		// check if reminder repeat is set or not
 		if ((reminderData.isMonthly() == false) && (reminderData.isWeekly() == false)
-				&& (reminderData.isDaily() == false) && (reminderData.isDoNotRepeat() == false)) {
+				&& (reminderData.isDaily() == false)) {
 			reminderData.setYearly(true);
+			reminderData.setDoNotRepeat(false);
 			reminderRepository.save(reminderData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("reminder.set.yearly"), token);
+					environment.getProperty("reminder.set.yearly"), message.Reminder_SetToRepeat);
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("reminder.notset"), token);
+					environment.getProperty("reminder.notset"), message.Reminder_NotSet);
 		}
 	}
-
-//	// set reminder repeat to do not repeat option
-//	@Override
-//	public Response doNotRepeat(String token, int noteid) {
-//		String email = jwtOperation.getToken(token);
-//		UserEntity user = userRepository.findByEmail(email);
-//		if (user == null)
-//			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-//					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-//		List<NoteEntity> allNotedata = noteRepository.findAll();
-//		List<NoteEntity> listOfNotes = allNotedata.stream()
-//				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
-//
-//		if (listOfNotes == null)
-//			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-//					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-//
-//		NoteEntity noteData = noteRepository.findById(noteid);
-//		ReminderEntity reminderData = noteData.getReminderEntity();
-//		// check if reminder is present or not
-//		if (reminderData == null)
-//			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-//					environment.getProperty("reminder.isnotpresent"), message.Reminder_isNotPresent);
-//		// check if reminder repeat is set or not 
-//		if ((reminderData.isMonthly() == false) && (reminderData.isWeekly() == false)
-//				&& (reminderData.isYearly() == false) && (reminderData.isDaily() == false)) {
-//			reminderData.setDoNotRepeat(true);
-//			reminderRepository.save(reminderData);
-//			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-//					environment.getProperty("reminder.set.DoNotRepeat"), token);
-//		} else {
-//			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-//					environment.getProperty("reminder.notset"), token);
-//		}
-//	}
 }

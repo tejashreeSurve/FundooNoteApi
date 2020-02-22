@@ -57,6 +57,8 @@ public class LabelController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
+	/******************* Notes operation **********************/
+	
 	// Show Note By Label ID
 	@GetMapping("/label/getNoteByLabelId/{id}")
 	public ResponseEntity<Response> getNoteByLabelID(@PathVariable int id) {
@@ -71,10 +73,26 @@ public class LabelController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
+	/********************* Sort Label operation *********************/
+	
 	// Change Label By passing Id
 	@PutMapping("/label/changelabel")
 	public ResponseEntity<Response> changeLabel(@RequestBody ChangeLabelDto changelabel) {
 		Response response = labelservice.changeLabel(changelabel);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+	
+	// Sort all Label By Name
+	@GetMapping("/label/sortAllLabelByName")
+	public ResponseEntity<Response> sortAllLabelByName() {
+		Response response = labelservice.sortAllLabel();
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+	
+	// Sort user Label By Name
+	@GetMapping("/label/sortLabelByName")
+	public ResponseEntity<Response> sortLabelByName(@RequestHeader String token) {
+		Response response = labelservice.sortLabelByTitle(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 }

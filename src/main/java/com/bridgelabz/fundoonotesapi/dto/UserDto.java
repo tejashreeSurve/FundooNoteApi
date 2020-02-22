@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Data Transfer Object that holds Data for User Api.
+ * @Purpose : This is Data Transfer Object that holds Data for User Api's.
  */
 public class UserDto {
 	@NotNull

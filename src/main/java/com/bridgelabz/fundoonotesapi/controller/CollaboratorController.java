@@ -32,8 +32,8 @@ public class CollaboratorController {
 		Response response = collaboratorservice.addCollaborator(token, noteid, collaborator);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-
-	// get all collaborator list
+	
+	// Get all collaborator list
 	@GetMapping("/collaborator/getCollaborator/{noteid}")
 	public ResponseEntity<Response> getCollaborator(@RequestHeader String token, @PathVariable int noteid){
 		Response response = collaboratorservice.getCollaborator(token, noteid);

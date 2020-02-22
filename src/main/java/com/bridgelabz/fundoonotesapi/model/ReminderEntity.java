@@ -33,63 +33,80 @@ public class ReminderEntity {
 	private boolean weekly;
 	private boolean monthly;
 	private boolean yearly;
-	private boolean doNotRepeat;
-	
+	private boolean doNotRepeat = true;
+
 	@OneToOne
-	@JoinColumn(name = "note_id" ,nullable = false)
+	@JoinColumn(name = "note_id", nullable = false)
 	private NoteEntity noteEntity;
-	
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getDate() {
 		return date;
 	}
+
 	public void setDate(String date) {
 		this.date = date;
 	}
+
 	public String getTime() {
 		return time;
 	}
+
 	public void setTime(String time) {
 		this.time = time;
 	}
+
 	public boolean isDaily() {
 		return daily;
 	}
+
 	public void setDaily(boolean daily) {
 		this.daily = daily;
 	}
+
 	public boolean isWeekly() {
 		return weekly;
 	}
+
 	public void setWeekly(boolean weekly) {
 		this.weekly = weekly;
 	}
+
 	public boolean isMonthly() {
 		return monthly;
 	}
+
 	public void setMonthly(boolean monthly) {
 		this.monthly = monthly;
 	}
+
 	public boolean isYearly() {
 		return yearly;
 	}
+
 	public void setYearly(boolean yearly) {
 		this.yearly = yearly;
 	}
+
 	public NoteEntity getNoteEntity() {
 		return noteEntity;
 	}
+
 	public void setNoteEntity(NoteEntity noteEntity) {
 		this.noteEntity = noteEntity;
 	}
+
 	public boolean isDoNotRepeat() {
 		return doNotRepeat;
 	}
+
 	public void setDoNotRepeat(boolean doNotRepeat) {
 		this.doNotRepeat = doNotRepeat;
 	}

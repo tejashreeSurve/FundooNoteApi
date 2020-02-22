@@ -34,6 +34,4 @@ public interface IReminderService {
 	// Repeat Reminder Yearly
 	Response repeatYearly(String token, int noteid);
 
-//	// Reminder Should Not Repeat
-//	Response doNotRepeat(String token, int noteid);
 }

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Tejashree Surve
- * Purpose : This is Entity Class for Label Entity.
+ * @Purpose : This is Entity Class for Label Entity.
  */
 @Component
 @Entity
@@ -54,5 +54,4 @@ public class LabelEntity {
 	public void setNoteList(List<NoteEntity> noteList) {
 		this.noteList = noteList;
 	}
-
 }

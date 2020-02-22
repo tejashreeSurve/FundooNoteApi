@@ -29,4 +29,10 @@ public interface ILabelService {
 	
 	// change label
 	Response changeLabel(ChangeLabelDto changelabel);
+	
+	// sort label by title
+	Response sortLabelByTitle(String token);
+	
+	// sort all label by title
+	Response sortAllLabel();
 }

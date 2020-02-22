@@ -4,7 +4,7 @@ import javax.validation.constraints.Pattern;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Data Transfer Object that holds Data for Rest Password Api.
+ * @Purpose : This is Data Transfer Object that holds Data for Rest Password Api's.
  */
 public class ResetPasswordDto {
 	@Pattern(regexp = "(?=.*[0-9])" ,message = "Password must contain at least one numeric value")

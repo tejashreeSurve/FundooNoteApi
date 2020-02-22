@@ -3,6 +3,7 @@ package com.bridgelabz.fundoonotesapi.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,14 +19,14 @@ import com.bridgelabz.fundoonotesapi.services.IUserService;
 
 /**
  * @author Tejashree Surve
- * @Purpose :  This is RestApi Controller for User Operation.
+ * @Purpose : This is RestApi Controller for User Operation.
  */
 @RestController
 public class UserController {
 
 	@Autowired
 	private IUserService userService;
-	
+
 	// Register RestApi method
 	@PostMapping("/userRegistration/register")
 	public ResponseEntity<Response> registrationUser(@RequestBody UserDto user) {
@@ -40,6 +41,13 @@ public class UserController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
+	// Get All User
+	@GetMapping("/userRegistration/getAllUser")
+	public ResponseEntity<Response> getAllUser() {
+		Response response = userService.getAllUser();
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+
 	// Forget password RestApi method
 	@PostMapping("/userRegistration/forgetPassword")
 	public ResponseEntity<Response> forgetPassword(@RequestBody EmailForgetPasswordDto emailforgetpassword) {
@@ -48,16 +56,23 @@ public class UserController {
 	}
 
 	// Reset Password RestApi method
-	@PutMapping(value = "/userRegistration/resetPassword")
+	@PutMapping("/userRegistration/resetPassword")
 	public ResponseEntity<Response> resetPassword(@RequestHeader String token, @RequestBody ResetPasswordDto password) {
 		Response response = userService.resetPassword(token, password);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
 	// User Validation RestApi method
 	@PostMapping("/userRegistration/validation")
-	public ResponseEntity<Response> validation(@RequestHeader String token){
+	public ResponseEntity<Response> validation(@RequestHeader String token) {
 		Response response = userService.validateUser(token);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+
+	// Sort All User by Last-Name
+	@GetMapping("/userRegistration/sortByUserLastName")
+	public ResponseEntity<Response> sortByLastName() {
+		Response response = userService.sortUserByLastName();
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 }

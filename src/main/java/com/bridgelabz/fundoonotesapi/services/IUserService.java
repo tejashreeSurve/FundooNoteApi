@@ -25,4 +25,10 @@ public interface IUserService {
 	
 	// validate user
 	Response validateUser(String token);
+	
+	// get all user
+	Response getAllUser();
+	
+	// sort user by last-name
+	Response sortUserByLastName();
 }

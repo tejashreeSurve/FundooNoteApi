@@ -9,14 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageInfo {
 	
-	// message for Http status code 
+	/********************** message for Http status code *********************/
+	
 	public String Bad_Request = "400";
 	
 	public String Success_Request = "200";
 	
 	public String Redirect_Request = "300";
 	
-	// messages for user
+	/********************** messages for user ************************/
+	
 	public String Invalide_Token = "Invalide Token";
 
 	public String User_Exist = "Please try with other Email-id";
@@ -37,7 +39,8 @@ public class MessageInfo {
 
 	public String Verify_User = "User can Login Successfully";
 
-	// messages for notes
+	/************************ messages for notes *************************/
+	
 	public String Note_Not_Exist = "Note does not Exist";
 	
 	public String Note_UnPin = "You can Pin it again";
@@ -60,7 +63,8 @@ public class MessageInfo {
 	
 	public String Note_Delete = "Note is Deleted from Note List";
 	
-	// messages for label
+	/************************ messages for label *************************/
+	
 	public String Label_Not_Exist = "No Label present with this Id";
 	
 	public String Label_Change = "Label Name is been changed";
@@ -71,7 +75,8 @@ public class MessageInfo {
 	
 	public String Label_Delete = "You can create/add new Label in Note";
 	
-	// messages for Reminder
+	/************************* messages for Reminder *************************/
+	
 	public String Reminder_isPresent = "Cannot Add Reminder";
 	
 	public String Reminder_isNotPresent = "Please First add Reminder to Note";
@@ -82,7 +87,12 @@ public class MessageInfo {
 	
 	public String Reminder_Delete = "You can set another Reminder";
 	
-	// message for collaborator 
+	public String Reminder_SetToRepeat = "Reminder is Set to Repeat";
+	
+	public String Reminder_NotSet = "Reminder is not abel to Set";
+	
+	/************************* message for collaborator ***********************/
+	
 	public String Collaborator = "You can add new Collaborator";
 	
 }

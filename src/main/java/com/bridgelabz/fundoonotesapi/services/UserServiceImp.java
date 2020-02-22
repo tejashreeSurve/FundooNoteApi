@@ -1,5 +1,8 @@
 package com.bridgelabz.fundoonotesapi.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -146,5 +149,22 @@ public class UserServiceImp implements IUserService {
 			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
 					environment.getProperty("status.password.incorrect"),message.Invalide_Password);
 		}
+	}
+
+	// Get all User 
+	@Override
+	public Response getAllUser() {
+		List<UserEntity> listOfUser = userRepository.findAll();
+		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+				environment.getProperty("status.user.display"),listOfUser);
+	}
+
+	// Sort User by Last-Name
+	@Override
+	public Response sortUserByLastName() {
+		List<UserEntity> listOfUser = userRepository.findAll();
+		List<UserEntity> sortedList = listOfUser.stream().sorted((list1,list2) -> list1.getLastname().compareTo(list2.getLastname())).collect(Collectors.toList());
+		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+				environment.getProperty("status.user.display"),sortedList);
 	}
 }

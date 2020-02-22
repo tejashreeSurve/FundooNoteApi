@@ -5,7 +5,7 @@ import javax.validation.constraints.Pattern;
 import org.springframework.lang.NonNull;
 /**
  * @author Tejashree Surve
- * Purpose : This is Data Transfer Object class for Reminder Api. 
+ * @Purpose : This is Data Transfer Object class for Reminder Api. 
  */
 public class ReminderDto {
 	@NonNull

@@ -20,17 +20,17 @@ import com.bridgelabz.fundoonotesapi.services.IReminderService;
 
 /**
  * @author Tejashree Surve
- * @Purpose :  This is RestApi Controller for Notes Operation.
+ * @Purpose : This is RestApi Controller for Notes Operation.
  */
 @RestController
 public class NoteController {
 
 	@Autowired
 	INoteService noteservice;
-	
+
 	@Autowired
 	IReminderService reminderservice;
-	
+
 	// Create New Note
 	@PostMapping("/notes/createnote")
 	public ResponseEntity<Response> createNote(@RequestHeader String token, @RequestBody NoteDto notedto) {
@@ -47,8 +47,9 @@ public class NoteController {
 
 	// Update Note
 	@PutMapping("/notes/updatenote/{id}")
-	public ResponseEntity<Response> updateNote(@RequestHeader String token,@PathVariable int id, @RequestBody NoteDto notedto) {
-		Response response = noteservice.updateNote(token, id,notedto);
+	public ResponseEntity<Response> updateNote(@RequestHeader String token, @PathVariable int id,
+			@RequestBody NoteDto notedto) {
+		Response response = noteservice.updateNote(token, id, notedto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
@@ -58,35 +59,57 @@ public class NoteController {
 		Response response = noteservice.deleteNote(token, id);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
 	// archive or un-archive note by note id
 	@PutMapping("/notes/archiveOrUnarchive/{id}")
-	public ResponseEntity<Response> archiveOrUnarchive(@RequestHeader String token,@PathVariable int id) {
+	public ResponseEntity<Response> archiveOrUnarchive(@RequestHeader String token, @PathVariable int id) {
 		Response response = noteservice.archiveOrUnarchive(token, id);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
 	// pin or un-pin note by note id
 	@PutMapping("/notes/pinOrUnpin/{id}")
-	public ResponseEntity<Response> pinOrUnpin(@RequestHeader String token,@PathVariable int id) {
+	public ResponseEntity<Response> pinOrUnpin(@RequestHeader String token, @PathVariable int id) {
 		Response response = noteservice.pinOrUnpin(token, id);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
 	// trash or un-trash note by note id
 	@PutMapping("/notes/trashOrUntrash/{id}")
-	public ResponseEntity<Response> trashOrUntrash(@RequestHeader String token,@PathVariable int id) {
+	public ResponseEntity<Response> trashOrUntrash(@RequestHeader String token, @PathVariable int id) {
 		Response response = noteservice.trashOrUntrash(token, id);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
+	// Sort User Note by Title
 	@GetMapping("/notes/noteBytitle")
 	public ResponseEntity<Response> sortByNotetitle(@RequestHeader String token) {
 		Response response = noteservice.sortByNotetitle(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
-	/****Reminder Api*****/
+
+	// Sort User Note by Description
+	@GetMapping("/notes/noteByDescription")
+	public ResponseEntity<Response> sortByNoteDesc(@RequestHeader String token) {
+		Response response = noteservice.sortByNoteDescription(token);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+
+	// Sort User Note by Reminder Date
+	@GetMapping("/notes/noteByReminderDate")
+	public ResponseEntity<Response> sortBydate(@RequestHeader String token) {
+		Response response = noteservice.sortByNoteDate(token);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+
+	// Sort All Note by Title
+	@GetMapping("/notes/allNoteByTitle")
+	public ResponseEntity<Response> sortAllNoteByTitle() {
+		Response response = noteservice.sortAllNoteBytitle();
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+
+	/******************************* Reminder Api's *******************************/
 
 	// Add reminder to note
 	@PostMapping("/reminder/addreminder/{noteid}")
