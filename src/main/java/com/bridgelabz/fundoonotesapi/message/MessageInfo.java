@@ -95,4 +95,12 @@ public class MessageInfo {
 	
 	public String Collaborator = "You can add new Collaborator";
 	
+	/************************* Profile Pic ***********************************/
+	
+	public String File_Is_Empty = "Please select the Profile_Pic";
+	
+	public String File_Not_Upload = "Profile Pic cannot be uploaded,Please try again !!";
+	
+	public String Profile_Uploaded = "Profile is successfully uploaded";
+	
 }

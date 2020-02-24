@@ -18,5 +18,4 @@ public interface NoteRepository extends JpaRepository<NoteEntity, Integer> {
 
 	// find data by user
 	NoteEntity findByUserEntity(UserEntity userdata);
-
 }

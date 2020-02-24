@@ -2,7 +2,7 @@ package com.bridgelabz.fundoonotesapi.exception;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is customize 
+ * @Purpose : This is customize Exception.
  */
 public class ForgetPasswordException extends RuntimeException {
 

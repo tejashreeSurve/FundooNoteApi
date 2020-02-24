@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoonotesapi.dto.EmailForgetPasswordDto;
 import com.bridgelabz.fundoonotesapi.dto.LoginUserDto;
@@ -73,6 +74,13 @@ public class UserController {
 	@GetMapping("/userRegistration/sortByUserLastName")
 	public ResponseEntity<Response> sortByLastName() {
 		Response response = userService.sortUserByLastName();
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+	
+	// Upload User Profile Pic
+	@PostMapping("/userRegistration/upload")
+	public ResponseEntity<Response> upload(@RequestHeader String token,@RequestHeader MultipartFile file) {
+		Response response = userService.uploadProfilePic(token, file);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 }

@@ -23,8 +23,7 @@ import com.bridgelabz.fundoonotesapi.utility.JwtToken;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Service class for Reminder which contain logic for all
- *          Api's.
+ * @Purpose : This is Service class for Reminder which contain logic for all Api's.
  */
 @Component
 @Service

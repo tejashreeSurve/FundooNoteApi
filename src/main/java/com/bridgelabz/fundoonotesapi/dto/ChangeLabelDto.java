@@ -2,7 +2,7 @@ package com.bridgelabz.fundoonotesapi.dto;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Data Transfer Object class for change label Api.
+ * @Purpose : This is Data Transfer Object class for change label Api's.
  */
 public class ChangeLabelDto {
 	private int preLabelId;

@@ -12,6 +12,7 @@ public interface ICollaboratorService {
 	// Add Collaborator
 	Response addCollaborator(String token,int noteid,CollaboratorDto collaboratorDto);
 	
+	// Get all Collaborator of Note
 	Response getCollaborator(String token,int noteid);
 	
 	// Delete Collaborator

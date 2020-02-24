@@ -1,5 +1,8 @@
 package com.bridgelabz.fundoonotesapi.services;
 
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bridgelabz.fundoonotesapi.dto.EmailForgetPasswordDto;
 import com.bridgelabz.fundoonotesapi.dto.LoginUserDto;
 import com.bridgelabz.fundoonotesapi.dto.ResetPasswordDto;
@@ -31,4 +34,7 @@ public interface IUserService {
 	
 	// sort user by last-name
 	Response sortUserByLastName();
+	
+	// upload profile pic 
+	Response uploadProfilePic(String token,MultipartFile file);
 }

@@ -1,6 +1,13 @@
 package com.bridgelabz.fundoonotesapi.services;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -9,11 +16,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoonotesapi.dto.EmailForgetPasswordDto;
 import com.bridgelabz.fundoonotesapi.dto.LoginUserDto;
 import com.bridgelabz.fundoonotesapi.dto.ResetPasswordDto;
 import com.bridgelabz.fundoonotesapi.dto.UserDto;
+import com.bridgelabz.fundoonotesapi.exception.FileIsEmpty;
+import com.bridgelabz.fundoonotesapi.exception.FileNotUploaded;
 import com.bridgelabz.fundoonotesapi.exception.ForgetPasswordException;
 import com.bridgelabz.fundoonotesapi.exception.LoginException;
 import com.bridgelabz.fundoonotesapi.exception.RegistrationException;
@@ -26,9 +36,11 @@ import com.bridgelabz.fundoonotesapi.repository.UserRepository;
 import com.bridgelabz.fundoonotesapi.response.Response;
 import com.bridgelabz.fundoonotesapi.utility.EmailSenderService;
 import com.bridgelabz.fundoonotesapi.utility.JwtToken;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 /**
- * @author Tejashree Surve 
+ * @author Tejashree Surve
  * @Purpose : This Class contains Logic for User for all RestApi methods.
  */
 @Service
@@ -50,10 +62,10 @@ public class UserServiceImp implements IUserService {
 	private MessageResponse messageResponse;
 
 	private SimpleMailMessage email;
-	
+
 	@Autowired
 	private Environment environment;
-	
+
 	@Autowired
 	private MessageInfo message;
 
@@ -71,11 +83,11 @@ public class UserServiceImp implements IUserService {
 						environment.getProperty("status.login.success"), message.Login_Done);
 			} else {
 				return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
-						environment.getProperty("status.password.incorrect"),message.Invalide_Password);
+						environment.getProperty("status.password.incorrect"), message.Invalide_Password);
 			}
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notverify"),message.User_Not_Verify);
+					environment.getProperty("status.email.notverify"), message.User_Not_Verify);
 		}
 	}
 
@@ -89,7 +101,8 @@ public class UserServiceImp implements IUserService {
 		} else {
 			userIsVarified.setIsValidate(true);
 			userRepository.save(userIsVarified);
-		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),environment.getProperty("status.email.isverify"),message.Verify_User);
+			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+					environment.getProperty("status.email.isverify"), message.Verify_User);
 		}
 	}
 
@@ -109,7 +122,7 @@ public class UserServiceImp implements IUserService {
 		emailSenderService.sendEmail(email);
 
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("status.user.register"),message.Registration_Done);
+				environment.getProperty("status.user.register"), message.Registration_Done);
 	}
 
 	// Forget Password operation
@@ -125,10 +138,10 @@ public class UserServiceImp implements IUserService {
 			email = messageResponse.passwordReset(emailForgetPassword.getEmail(), userdata.getFirstname(), token);
 			emailSenderService.sendEmail(email);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("status.token.send"),message.Token_Send);
+					environment.getProperty("status.token.send"), message.Token_Send);
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notverify"),message.User_Not_Verify);
+					environment.getProperty("status.email.notverify"), message.User_Not_Verify);
 		}
 	}
 
@@ -136,7 +149,6 @@ public class UserServiceImp implements IUserService {
 	@Override
 	public Response resetPassword(String token, ResetPasswordDto passwordreset) {
 		String checkEmail = jwtobject.getToken(token);
-		System.out.println(checkEmail);
 		UserEntity userUpdate = userRepository.findByEmail(checkEmail);
 		if (userUpdate == null)
 			throw new ResetPasswordException(message.User_Exist);
@@ -144,27 +156,71 @@ public class UserServiceImp implements IUserService {
 			userUpdate.setUserpassword(passwordreset.getPassword());
 			userRepository.save(userUpdate);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("status.password.update"),message.Update_Password);
+					environment.getProperty("status.password.update"), message.Update_Password);
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
-					environment.getProperty("status.password.incorrect"),message.Invalide_Password);
+					environment.getProperty("status.password.incorrect"), message.Invalide_Password);
 		}
 	}
 
-	// Get all User 
+	// Get all User
 	@Override
 	public Response getAllUser() {
 		List<UserEntity> listOfUser = userRepository.findAll();
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("status.user.display"),listOfUser);
+				environment.getProperty("status.user.display"), listOfUser);
 	}
 
 	// Sort User by Last-Name
 	@Override
 	public Response sortUserByLastName() {
 		List<UserEntity> listOfUser = userRepository.findAll();
-		List<UserEntity> sortedList = listOfUser.stream().sorted((list1,list2) -> list1.getLastname().compareTo(list2.getLastname())).collect(Collectors.toList());
+		List<UserEntity> sortedList = listOfUser.stream()
+				.sorted((list1, list2) -> list1.getLastname().compareTo(list2.getLastname()))
+				.collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("status.user.display"),sortedList);
+				environment.getProperty("status.user.display"), sortedList);
+	}
+
+	// Upload User Profile Pic
+	@Override
+	public Response uploadProfilePic(String token, MultipartFile file) {
+		String email = jwtobject.getToken(token);
+		// check whether user is present or not
+		UserEntity user = userRepository.findByEmail(email);
+		if (user == null) {
+			throw new ValidateException(message.User_Not_Exist);
+		}
+		// file is not selected to upload 
+		if (file.isEmpty())
+			throw new FileIsEmpty(message.File_Is_Empty);
+		
+		File uploadFile = new File(file.getOriginalFilename());
+		try {
+			BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(uploadFile));
+			try {
+				outputStream.write(file.getBytes());
+				outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		// set all cloudinary properties 
+		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name", "duquns9m9", "api_key",
+				"691264649257271", "api_secret", "mRFRpme5AAqej5Ktef3GYVSzWtI"));
+		Map<?, ?> uploadProfile;
+		try {
+			// this upload the image on cloudinary 
+			uploadProfile = cloudinary.uploader().upload(uploadFile, ObjectUtils.emptyMap());
+		} catch (IOException e) {
+			throw new FileNotUploaded(message.File_Not_Upload);
+		}
+		// set the profile-pic url in userDetail table 
+		user.setProfilePic(uploadProfile.get("secure_url").toString());
+		userRepository.save(user);
+		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+				environment.getProperty("upload.profilepic"), message.Profile_Uploaded);
 	}
 }

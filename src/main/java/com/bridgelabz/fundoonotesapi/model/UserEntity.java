@@ -31,6 +31,7 @@ public class UserEntity {
 	private String email;
 	private String userpassword;
 	private boolean isValidate;
+	private String profilePic;
 
 	@OneToMany(mappedBy = "userEntity")
 	private List<NoteEntity> noteEntity;
@@ -117,5 +118,13 @@ public class UserEntity {
 
 	public void setValidate(boolean isValidate) {
 		this.isValidate = isValidate;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
 	}
 }

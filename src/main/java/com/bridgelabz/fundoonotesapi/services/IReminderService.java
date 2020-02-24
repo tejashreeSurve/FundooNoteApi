@@ -5,8 +5,7 @@ import com.bridgelabz.fundoonotesapi.response.Response;
 
 /**
  * @author Tejashree Surve 
- * @Purpose : This is ReminderService Interface which
- *         contains every method of services class.
+ * @Purpose : This is ReminderService Interface which contains every method of services class.
  */
 public interface IReminderService {
 

@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.bridgelabz.fundoonotesapi.message.MessageInfo;
 import com.bridgelabz.fundoonotesapi.response.Response;
-
+/**
+ * @author Tejashree Surve
+ * @Purpose : This is Global Exception.
+ */
 @ControllerAdvice
 public class GlobalException {
 	Environment environment;
@@ -56,5 +59,17 @@ public class GlobalException {
 	public ResponseEntity<Response> ReminderNotPresentException(Exception e){
 		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request),
 				e.getMessage(), "Please try again!!!"), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(FileIsEmpty.class)
+	public ResponseEntity<Response> FileIsEmpty(Exception e){
+		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
+				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(FileNotUploaded.class)
+	public ResponseEntity<Response> FileNotUploaded(Exception e){
+		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
+				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
 	}
 }
