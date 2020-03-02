@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * @author Tejashree Surve 
+ * @author Tejashree Surve
  * @Purpose : This is Entity Class for Note DataBase.
  */
 @Entity
@@ -37,23 +37,23 @@ public class NoteEntity {
 	@NonNull
 	private String description;
 	@NonNull
-	private boolean archiveOrUnArchive;
+	private boolean isArchive;
 	@NonNull
-	private boolean pinOrUnPin;
+	private boolean isPin;
 	@NonNull
-	private boolean trashOrUnTrash;
+	private boolean isTrash;
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private UserEntity userEntity;
 	@ManyToMany
 	private List<LabelEntity> labelList = new ArrayList<LabelEntity>();
-	
+
 	@OneToOne(mappedBy = "noteEntity")
 	private ReminderEntity reminderEntity;
-	
+
 	@OneToMany(mappedBy = "noteEntity")
 	private List<CollaboratorEntity> collaboratorList = new ArrayList<CollaboratorEntity>();
-	
+
 	public int getId() {
 		return id;
 	}
@@ -78,28 +78,28 @@ public class NoteEntity {
 		this.description = description;
 	}
 
-	public boolean isArchiveOrUnArchive() {
-		return archiveOrUnArchive;
+	public boolean isArchive() {
+		return isArchive;
 	}
 
-	public void setArchiveOrUnArchive(boolean archiveOrUnArchive) {
-		this.archiveOrUnArchive = archiveOrUnArchive;
+	public void setArchive(boolean isArchive) {
+		this.isArchive = isArchive;
 	}
 
-	public boolean isPinOrUnPin() {
-		return pinOrUnPin;
+	public boolean isPin() {
+		return isPin;
 	}
 
-	public void setPinOrUnPin(boolean pinOrUnPin) {
-		this.pinOrUnPin = pinOrUnPin;
+	public void setPin(boolean isPin) {
+		this.isPin = isPin;
 	}
 
-	public boolean isTrashOrUnTrash() {
-		return trashOrUnTrash;
+	public boolean isTrash() {
+		return isTrash;
 	}
 
-	public void setTrashOrUnTrash(boolean trashOrUnTrash) {
-		this.trashOrUnTrash = trashOrUnTrash;
+	public void setTrash(boolean isTrash) {
+		this.isTrash = isTrash;
 	}
 
 	public UserEntity getUserEntity() {

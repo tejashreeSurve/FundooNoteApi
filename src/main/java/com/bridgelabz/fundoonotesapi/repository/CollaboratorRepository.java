@@ -9,5 +9,5 @@ import com.bridgelabz.fundoonotesapi.model.CollaboratorEntity;
  * @Purpose : This is CollaboratorRepository Interface which extends inbuilt JpaRepository.
  */
 public interface CollaboratorRepository extends JpaRepository<CollaboratorEntity, Integer>{
-
+		CollaboratorEntity findByMailReciver(String mailReciver);
 }

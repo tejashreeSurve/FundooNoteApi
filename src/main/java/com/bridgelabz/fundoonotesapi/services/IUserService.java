@@ -24,7 +24,7 @@ public interface IUserService {
 	Response forgetPassword(EmailForgetPasswordDto email);
 
 	// reset password
-	Response resetPassword(String token, ResetPasswordDto passwordrest);
+	Response resetPassword(String token, ResetPasswordDto passwordRest);
 	
 	// validate user
 	Response validateUser(String token);

@@ -10,27 +10,27 @@ import com.bridgelabz.fundoonotesapi.response.Response;
 public interface IReminderService {
 
 	// Add Reminder
-	Response addReminder(String token, int noteid, ReminderDto reminderdto);
+	Response addReminder(String token, int noteId, ReminderDto reminderDto);
 
 	// Show Reminder
 	Response getReminder(String token);
 
 	// Update Reminder
-	Response updateReminder(String token, int noteid, ReminderDto reminderDto);
+	Response updateReminder(String token, int noteId, ReminderDto reminderDto);
 
 	// Delete Reminder
-	Response deleteReminder(String token, int noteid);
+	Response deleteReminder(String token, int noteId);
 
 	// Repeat Reminder Daily
-	Response repeatDaily(String token, int noteid);
+	Response repeatDaily(String token, int noteId);
 
 	// Repeat Reminder Weekly
-	Response repeatWeekly(String token, int noteid);
+	Response repeatWeekly(String token, int noteId);
 
 	// Repeat Reminder Monthly
-	Response repeatMonthly(String token, int noteid);
+	Response repeatMonthly(String token, int noteId);
 
 	// Repeat Reminder Yearly
-	Response repeatYearly(String token, int noteid);
+	Response repeatYearly(String token, int noteId);
 
 }

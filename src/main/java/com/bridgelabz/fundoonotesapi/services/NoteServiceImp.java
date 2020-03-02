@@ -1,10 +1,5 @@
 package com.bridgelabz.fundoonotesapi.services;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,18 +52,19 @@ public class NoteServiceImp implements INoteService {
 
 	// Create New Note
 	@Override
-	public Response createNote(String token, NoteDto notedto) {
+	public Response createNote(String token, NoteDto noteDto) {
 		String email = jwtOperation.getToken(token);
-
 		UserEntity user = userRepository.findByEmail(email);
+		// check whether user is present or not
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		NoteEntity noteData = mapper.map(notedto, NoteEntity.class);
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		
+		NoteEntity noteData = mapper.map(noteDto, NoteEntity.class);
 		noteData.setUserEntity(user);
 		noteRepository.save(noteData);
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("note.create"), message.Note_Create);
+		environment.getProperty("note.create"), message.Note_Create);
 	}
 
 	// Get all Notes
@@ -76,106 +72,110 @@ public class NoteServiceImp implements INoteService {
 	public Response getAllNotes(String token) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
-		List<NoteEntity> allNotedata = noteRepository.findAll();
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		if (allNotedata == null)
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		// check whether user has note or not
+		if (user.getNoteEntity() == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-		// this stream filter those notes which contains user id is equal to given token
-		List<NoteEntity> listOfNotes = allNotedata.stream()
-				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("note.getallnotes"), listOfNotes);
+		environment.getProperty("note.getallnotes"), user.getNoteEntity());
 	}
 
 	// Update Note
 	@Override
-	public Response updateNote(String token, int id, NoteDto notedto) {
+	public Response updateNote(String token, int noteId, NoteDto noteDto) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		NoteEntity noteData = noteRepository.findById(id);
-		if (noteData == null)
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		// check whether note is present or not 
+		NoteEntity noteData = noteRepository.findById(noteId);
+		if (noteRepository.findById(noteId) == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-		else {
-			noteData.setDescription(notedto.getDescription());
-			noteData.setTitle(notedto.getTitle());
-			noteRepository.save(noteData);
-			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("note.update"), message.Note_Update);
-		}
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		
+		noteData.setDescription(noteDto.getDescription());
+		noteData.setTitle(noteDto.getTitle());
+		noteRepository.save(noteData);
+		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+		environment.getProperty("note.update"), message.Note_Update);
 	}
 
 	// Delete Note
 	@Override
-	public Response deleteNote(String token, int id) {
+	public Response deleteNote(String token, int noteId) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		if (noteRepository.findById(id) == null)
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		// check whether note is present or not 
+		if (noteRepository.findById(noteId) == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-		else {
-			noteRepository.deleteById(id);
-			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("note.delete"), message.Note_Delete);
-		}
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		
+		noteRepository.deleteById(noteId);
+		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+		environment.getProperty("note.delete"), message.Note_Delete);
 	}
 
 	// Pin or UnPin Note
 	@Override
-	public Response pinOrUnpin(String token, int id) {
+	public Response isPin(String token, int noteId) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		NoteEntity notedata = noteRepository.findById(id);
-		if (notedata == null)
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		
+		NoteEntity noteData = noteRepository.findById(noteId);
+		if (noteData == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-
-		if (notedata.isPinOrUnPin() == false) {
-			notedata.setPinOrUnPin(true);
-			noteRepository.save(notedata);
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		// isPin is false then change it to true else false
+		if (noteData.isPin() == false) {
+			noteData.setPin(true);
+			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("note.ispin"), message.Note_Pin);
+			environment.getProperty("note.ispin"), message.Note_Pin);
 		} else {
-			notedata.setPinOrUnPin(false);
-			noteRepository.save(notedata);
+			noteData.setPin(false);
+			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("note.isunpin"), message.Note_UnPin);
+			environment.getProperty("note.isunpin"), message.Note_UnPin);
 		}
 	}
 
 	// Archive or UnArchive
 	@Override
-	public Response archiveOrUnarchive(String token, int id) {
+	public Response isArchive(String token, int noteId) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		NoteEntity notedata = noteRepository.findById(id);
-		if (notedata == null)
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		
+		NoteEntity noteData = noteRepository.findById(noteId);
+		if (noteData == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-
-		if (notedata.isArchiveOrUnArchive() == false) {
-			notedata.setArchiveOrUnArchive(true);
-			noteRepository.save(notedata);
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		// isArchive is false then change it to true else false
+		if (noteData.isArchive() == false) {
+			noteData.setArchive(true);
+			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.isarchive"), message.Note_Archive);
+			environment.getProperty("note.isarchive"), message.Note_Archive);
 		} else {
-			notedata.setArchiveOrUnArchive(false);
-			noteRepository.save(notedata);
+			noteData.setArchive(false);
+			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
 					environment.getProperty("note.isunarchive"), message.Note_UnArchive);
 		}
@@ -183,62 +183,61 @@ public class NoteServiceImp implements INoteService {
 
 	// Trash or UnTrash
 	@Override
-	public Response trashOrUntrash(String token, int id) {
+	public Response isTrash(String token, int noteId) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		NoteEntity notedata = noteRepository.findById(id);
-		if (notedata == null)
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		
+		NoteEntity noteData = noteRepository.findById(noteId);
+		if (noteData == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-
-		if (notedata.isTrashOrUnTrash() == false) {
-			notedata.setTrashOrUnTrash(true);
-			noteRepository.save(notedata);
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		// isTrash is false then change it to true else false
+		if (noteData.isTrash() == false) {
+			noteData.setTrash(true);
+			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.istrash"), message.Note_Trash);
+			environment.getProperty("note.istrash"), message.Note_Trash);
 		} else {
-			notedata.setTrashOrUnTrash(false);
-			noteRepository.save(notedata);
+			noteData.setTrash(false);
+			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.isuntrash"), message.Note_UnTrash);
+			environment.getProperty("note.isuntrash"), message.Note_UnTrash);
 		}
 	}
-/*************************************** Sorting Logic *****************************************/
+
+	/**************************************** Sorting Logic *****************************************/
 
 	// Sort all Notes by Title
 	@Override
-	public Response sortAllNoteBytitle() {
-		List<NoteEntity> allNotedata = noteRepository.findAll();
-		List<NoteEntity> sortedList = allNotedata.stream()
+	public Response sortAllNoteByTitle() {
+		List<NoteEntity> sortedList = noteRepository.findAll().stream()
 				.sorted((list1, list2) -> list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("note.getallnotes"), sortedList);
+		environment.getProperty("note.getallnotes"), sortedList);
 	}
 
 	// Sort User Notes by Title
 	@Override
-	public Response sortByNotetitle(String token) {
+	public Response sortByNoteTitle(String token) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
-		List<NoteEntity> allNotedata = noteRepository.findAll();
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
 
-		if (allNotedata == null)
+		if (user.getNoteEntity() == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-
-		// this stream filter those notes which contains user id is equal to given token
-		List<NoteEntity> listOfNotes = allNotedata.stream()
-				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
-		List<NoteEntity> sortedList = listOfNotes.stream()
-				.sorted((list1, list2) -> list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		// stream feature is used to sort the list
+		List<NoteEntity> sortedList = user.getNoteEntity().stream()
+		.sorted((list1, list2) -> list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("note.getallnotes"), sortedList);
+		environment.getProperty("note.getallnotes"), sortedList);
 	}
 
 	// Sort User Notes by Reminder Date
@@ -246,29 +245,27 @@ public class NoteServiceImp implements INoteService {
 	public Response sortByNoteDate(String token) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
-		List<NoteEntity> allNotedata = noteRepository.findAll();
-		if (user == null)
-			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
 		
-		if (allNotedata == null)
-			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
 		
-		// this stream filter those notes which contains user id is equal to given token
-		List<NoteEntity> listOfNotes = allNotedata.stream()
-				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
-		// this for loop check whether reminder is present in Note or not
-		for (NoteEntity noteEntity : listOfNotes) {
-			if (noteEntity.getReminderEntity() == null) {
-				throw new ReminderNotPresentException(message.Reminder_isNotPresent);
-			}
-		}
-		List<NoteEntity> sortedList = listOfNotes.stream().sorted(
-				(list1, list2) -> list1.getReminderEntity().getDate().compareTo(list2.getReminderEntity().getDate()))
-				.collect(Collectors.toList());
-		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("note.getallnotes"), sortedList);
+		 if (user == null)
+			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+	
+		if (user.getNoteEntity() == null)
+			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+//		
+//		for (NoteEntity noteEntity : user.getNoteEntity()) {
+//			if(noteEntity.getReminderEntity() == null )
+//				throw new ReminderNotPresentException(message.Reminder_isNotPresent);
+//		}
+		
+		// stream feature is used to sort the list
+				List<NoteEntity> sortedList = user.getNoteEntity().stream()
+						.sorted((list1, list2) -> list1.getReminderEntity().getTime().compareTo(list2.getReminderEntity().getTime()))
+						.collect(Collectors.toList());
+				return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+						environment.getProperty("note.getallnotes"), sortedList);
 	}
 
 	// Sort User Notes by Note Description
@@ -276,22 +273,19 @@ public class NoteServiceImp implements INoteService {
 	public Response sortByNoteDescription(String token) {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
-		List<NoteEntity> allNotedata = noteRepository.findAll();
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		
-		if (allNotedata == null)
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+
+		if (user.getNoteEntity() == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-		
-		// this stream filter those notes which contains user id is equal to given token
-		List<NoteEntity> listOfNotes = allNotedata.stream()
-				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
-		List<NoteEntity> sortedList = listOfNotes.stream()
+			environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		// stream feature is used to sort the list
+		List<NoteEntity> sortedList = user.getNoteEntity().stream()
 				.sorted((list1, list2) -> list1.getDescription().compareTo(list2.getDescription()))
 				.collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("note.getallnotes"), sortedList);
+		environment.getProperty("note.getallnotes"), sortedList);
 	}
 }

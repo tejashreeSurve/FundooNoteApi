@@ -10,25 +10,22 @@ import com.bridgelabz.fundoonotesapi.response.Response;
  */
 public interface ILabelService {
 	// add label
-	Response addLabel(String token, int id,LabelDto labeldto);
+	Response createLabel(String token, LabelDto labelDto);
 	
 	// get all label 
-	Response getAlllabel(String token);
+	Response getAllLabel(String token);
 	
 	// update label
-	Response updateLabel(String token,int id, LabelDto labeldto);
+	Response updateLabel(String token, int labelId, LabelDto labelDto);
 	
 	// delete label
-	Response deleteLabel(String token, int id);
+	Response deleteLabel(String token, int labelId);
 	
 	// get label by id
-	Response getNoteByLabelId(int id);
-	
-	// get label by label name
-	Response getNoteByLabelName(LabelDto labeldto);
+	Response getNoteByLabelName(String token, int labelId);
 	
 	// change label
-	Response changeLabel(ChangeLabelDto changelabel);
+	Response changeLabel(ChangeLabelDto changeLabel);
 	
 	// sort label by title
 	Response sortLabelByTitle(String token);

@@ -29,10 +29,10 @@ public class ReminderEntity {
 	private String date;
 	@NonNull
 	private String time;
-	private boolean daily;
-	private boolean weekly;
-	private boolean monthly;
-	private boolean yearly;
+	private boolean repeatDaily;
+	private boolean repeatWeekly;
+	private boolean repeatMonthly;
+	private boolean repeatYearly;
 	private boolean doNotRepeat = true;
 
 	@OneToOne
@@ -63,36 +63,36 @@ public class ReminderEntity {
 		this.time = time;
 	}
 
-	public boolean isDaily() {
-		return daily;
+	public boolean isRepeatDaily() {
+		return repeatDaily;
 	}
 
-	public void setDaily(boolean daily) {
-		this.daily = daily;
+	public void setRepeatDaily(boolean repeatDaily) {
+		this.repeatDaily = repeatDaily;
 	}
 
-	public boolean isWeekly() {
-		return weekly;
+	public boolean isRepeatWeekly() {
+		return repeatWeekly;
 	}
 
-	public void setWeekly(boolean weekly) {
-		this.weekly = weekly;
+	public void setRepeatWeekly(boolean repeatWeekly) {
+		this.repeatWeekly = repeatWeekly;
 	}
 
-	public boolean isMonthly() {
-		return monthly;
+	public boolean isRepeatMonthly() {
+		return repeatMonthly;
 	}
 
-	public void setMonthly(boolean monthly) {
-		this.monthly = monthly;
+	public void setRepeatMonthly(boolean repeatMonthly) {
+		this.repeatMonthly = repeatMonthly;
 	}
 
-	public boolean isYearly() {
-		return yearly;
+	public boolean isRepeatYearly() {
+		return repeatYearly;
 	}
 
-	public void setYearly(boolean yearly) {
-		this.yearly = yearly;
+	public void setRepeatYearly(boolean repeatYearly) {
+		this.repeatYearly = repeatYearly;
 	}
 
 	public NoteEntity getNoteEntity() {

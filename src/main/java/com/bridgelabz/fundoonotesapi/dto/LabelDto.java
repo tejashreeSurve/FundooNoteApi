@@ -4,17 +4,17 @@ import org.springframework.lang.NonNull;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Data Transfer Object class for label Api's. 
+ * @Purpose : This is Data Transfer Object class for label Api's.
  */
 public class LabelDto {
 	@NonNull
-	private String labelname;
+	private String labelName;
 
-	public String getLabelname() {
-		return labelname;
+	public String getLabelName() {
+		return labelName;
 	}
 
-	public void setLabelname(String labelname) {
-		this.labelname = labelname;
+	public void setLabelName(String labelName) {
+		this.labelName = labelName;
 	}
 }

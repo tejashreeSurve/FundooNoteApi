@@ -53,7 +53,7 @@ public class UserServiceImp implements IUserService {
 	private ModelMapper mapper;
 
 	@Autowired
-	private JwtToken jwtobject;
+	private JwtToken jwtObject;
 
 	@Autowired
 	private EmailSenderService emailSenderService;
@@ -61,7 +61,7 @@ public class UserServiceImp implements IUserService {
 	@Autowired
 	private MessageResponse messageResponse;
 
-	private SimpleMailMessage email;
+	SimpleMailMessage email;
 
 	@Autowired
 	private Environment environment;
@@ -73,128 +73,129 @@ public class UserServiceImp implements IUserService {
 	@Override
 	public Response login(LoginUserDto loginUser) {
 		UserEntity user = userRepository.findByEmail(loginUser.getEmail());
-		String token = jwtobject.generateToken(loginUser.getEmail());
+		String token = jwtObject.generateToken(loginUser.getEmail());
 		System.out.println(token);
+		
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
+		
 		if (user.getIsValidate()) {
-			if ((user.getUserpassword()).equals(loginUser.getUserpassword())) {
+			if ((user.getUserPassword()).equals(loginUser.getUserPassword())) {
 				return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-						environment.getProperty("status.login.success"), message.Login_Done);
+				environment.getProperty("status.login.success"), message.Login_Done);
 			} else {
 				return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
-						environment.getProperty("status.password.incorrect"), message.Invalide_Password);
+				environment.getProperty("status.password.incorrect"), message.Invalide_Password);
 			}
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notverify"), message.User_Not_Verify);
+			environment.getProperty("status.email.notverify"), message.User_Not_Verify);
 		}
 	}
 
 	// For Verification
 	@Override
 	public Response validateUser(String token) {
-		String email = jwtobject.getToken(token);
-		UserEntity userIsVarified = userRepository.findByEmail(email);
-		if (userIsVarified == null) {
+		String email = jwtObject.getToken(token);
+		UserEntity userIsVerified = userRepository.findByEmail(email);
+		if (userIsVerified == null)
 			throw new ValidateException(message.User_Not_Exist);
-		} else {
-			userIsVarified.setIsValidate(true);
-			userRepository.save(userIsVarified);
-			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("status.email.isverify"), message.Verify_User);
-		}
+		userIsVerified.setIsValidate(true);
+		userRepository.save(userIsVerified);
+		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+		environment.getProperty("status.email.isverify"), message.Verify_User);
 	}
 
 	// Registration operation
 	@Override
 	public Response registration(UserDto user) {
-		String emailIsPresent = user.getEmail();
-		UserEntity userIsPresent = userRepository.findByEmail(emailIsPresent);
-		if (userIsPresent != null) {
+		String checkEmail = user.getEmail();
+		UserEntity userIsPresent = userRepository.findByEmail(checkEmail);
+		if (userIsPresent != null) 
 			throw new RegistrationException(message.User_Exist);
-		}
-		UserEntity userdata = mapper.map(user, UserEntity.class);
-		userRepository.save(userdata);
-		String token = jwtobject.generateToken(userdata.getEmail());
+		UserEntity userData = mapper.map(user, UserEntity.class);
+		String token = jwtObject.generateToken(userData.getEmail());
 		System.out.println(token);
-		email = messageResponse.verifyMail(userdata.getEmail(), userdata.getFirstname(), token);
+		email = messageResponse.verifyMail(userData.getEmail(), userData.getFirstName(), token);
 		emailSenderService.sendEmail(email);
-
+		userRepository.save(userData);
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("status.user.register"), message.Registration_Done);
+		environment.getProperty("status.user.register"), message.Registration_Done);
 	}
 
 	// Forget Password operation
 	@Override
 	public Response forgetPassword(EmailForgetPasswordDto emailForgetPassword) {
 		UserEntity user = userRepository.findByEmail(emailForgetPassword.getEmail());
+		
 		if (user == null)
 			throw new ForgetPasswordException(message.User_Exist);
+		
+		// check whether user is done with validation or not
 		if (user.getIsValidate()) {
-			String token = jwtobject.generateToken(emailForgetPassword.getEmail());
-			UserEntity userdata = userRepository.findByEmail(emailForgetPassword.getEmail());
+			String token = jwtObject.generateToken(emailForgetPassword.getEmail());
+			UserEntity userData = userRepository.findByEmail(emailForgetPassword.getEmail());
 			System.out.println(token);
-			email = messageResponse.passwordReset(emailForgetPassword.getEmail(), userdata.getFirstname(), token);
+			email = messageResponse.passwordReset(emailForgetPassword.getEmail(), userData.getFirstName(), token);
 			emailSenderService.sendEmail(email);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("status.token.send"), message.Token_Send);
+			environment.getProperty("status.token.send"), message.Token_Send);
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notverify"), message.User_Not_Verify);
+			environment.getProperty("status.email.notverify"), message.User_Not_Verify);
 		}
 	}
 
 	// Reset Password operation
 	@Override
-	public Response resetPassword(String token, ResetPasswordDto passwordreset) {
-		String checkEmail = jwtobject.getToken(token);
+	public Response resetPassword(String token, ResetPasswordDto passwordReset) {
+		String checkEmail = jwtObject.getToken(token);
 		UserEntity userUpdate = userRepository.findByEmail(checkEmail);
+		
 		if (userUpdate == null)
 			throw new ResetPasswordException(message.User_Exist);
-		if (passwordreset.getConfirmpassword().equals(passwordreset.getPassword())) {
-			userUpdate.setUserpassword(passwordreset.getPassword());
+		
+		if (passwordReset.getConfirmPassword().equals(passwordReset.getPassword())) {
+			userUpdate.setUserPassword(passwordReset.getPassword());
 			userRepository.save(userUpdate);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("status.password.update"), message.Update_Password);
+			environment.getProperty("status.password.update"), message.Update_Password);
 		} else {
 			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
-					environment.getProperty("status.password.incorrect"), message.Invalide_Password);
+			environment.getProperty("status.password.incorrect"), message.Invalide_Password);
 		}
 	}
 
 	// Get all User
 	@Override
 	public Response getAllUser() {
-		List<UserEntity> listOfUser = userRepository.findAll();
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("status.user.display"), listOfUser);
+		environment.getProperty("status.user.display"), userRepository.findAll());
 	}
 
 	// Sort User by Last-Name
 	@Override
 	public Response sortUserByLastName() {
-		List<UserEntity> listOfUser = userRepository.findAll();
-		List<UserEntity> sortedList = listOfUser.stream()
-				.sorted((list1, list2) -> list1.getLastname().compareTo(list2.getLastname()))
+		List<UserEntity> sortedList = userRepository.findAll().stream()
+				.sorted((list1, list2) -> list1.getLastName().compareTo(list2.getLastName()))
 				.collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("status.user.display"), sortedList);
+		environment.getProperty("status.user.display"), sortedList);
 	}
 
 	// Upload User Profile Pic
 	@Override
 	public Response uploadProfilePic(String token, MultipartFile file) {
-		String email = jwtobject.getToken(token);
+		String email = jwtObject.getToken(token);
 		// check whether user is present or not
 		UserEntity user = userRepository.findByEmail(email);
-		if (user == null) {
+		if (user == null) 
 			throw new ValidateException(message.User_Not_Exist);
-		}
-		// file is not selected to upload 
+		
+		// file is not selected to upload
 		if (file.isEmpty())
 			throw new FileIsEmpty(message.File_Is_Empty);
-		
+
 		File uploadFile = new File(file.getOriginalFilename());
 		try {
 			BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -207,20 +208,20 @@ public class UserServiceImp implements IUserService {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		// set all cloudinary properties 
+		// set all cloudinary properties
 		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name", "duquns9m9", "api_key",
 				"691264649257271", "api_secret", "mRFRpme5AAqej5Ktef3GYVSzWtI"));
 		Map<?, ?> uploadProfile;
 		try {
-			// this upload the image on cloudinary 
+			// this upload the image on cloudinary
 			uploadProfile = cloudinary.uploader().upload(uploadFile, ObjectUtils.emptyMap());
 		} catch (IOException e) {
 			throw new FileNotUploaded(message.File_Not_Upload);
 		}
-		// set the profile-pic url in userDetail table 
+		// set the profile-pic url in userDetail table
 		user.setProfilePic(uploadProfile.get("secure_url").toString());
 		userRepository.save(user);
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("upload.profilepic"), message.Profile_Uploaded);
+		environment.getProperty("upload.profilepic"), message.Profile_Uploaded);
 	}
 }

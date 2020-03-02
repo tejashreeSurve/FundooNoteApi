@@ -1,9 +1,10 @@
 package com.bridgelabz.fundoonotesapi.dto;
 
 import org.springframework.lang.NonNull;
+
 /**
  * @author Tejashree Surve
- * @Purpose : This is Data Transfer Object class for Notes Api's. 
+ * @Purpose : This is Data Transfer Object class for Notes Api's.
  */
 public class NoteDto {
 	@NonNull

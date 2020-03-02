@@ -12,31 +12,31 @@ import com.bridgelabz.fundoonotesapi.response.Response;
 public interface INoteService {
 
 	// create note
-	Response createNote(String token, NoteDto notedto);
+	Response createNote(String token, NoteDto noteDto);
 
 	// get all note
 	Response getAllNotes(String token);
 
 	// update note
-	Response updateNote(String token, int id, NoteDto notedto);
-
+	Response updateNote(String token, int noteId, NoteDto noteDto);
+	
 	// delete note
-	Response deleteNote(String token, int id);
+	Response deleteNote(String token, int noteId);
 
 	// pin or un-pin note
-	Response pinOrUnpin(String token, int id);
+	Response isPin(String token, int noteId);
 
 	// archive or un-archive note
-	Response archiveOrUnarchive(String token, int id);
+	Response isArchive(String token, int noteId);
 
 	// trash or un-trash note
-	Response trashOrUntrash(String token, int id);
+	Response isTrash(String token, int noteId);
 
 	// sort all notes by title
-	Response sortAllNoteBytitle();
+	Response sortAllNoteByTitle();
 
 	// sort user note by note title
-	Response sortByNotetitle(String token);
+	Response sortByNoteTitle(String token);
 	
 	// sort user note by note description
 	Response sortByNoteDescription(String token);

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotesapi.dto.CollaboratorDto;
@@ -16,35 +17,36 @@ import com.bridgelabz.fundoonotesapi.response.Response;
 import com.bridgelabz.fundoonotesapi.services.ICollaboratorService;
 
 /**
- * @author Tejashree Surve 
+ * @author Tejashree Surve
  * @Purpose : This is RestApi Controller for Collaborator Operation.
  */
 @RestController
+@RequestMapping("/collaborator")
 public class CollaboratorController {
 
 	@Autowired
-	ICollaboratorService collaboratorservice;
-	
+	ICollaboratorService collaboratorService;
+
 	// add Collaborator
-	@PostMapping("/collaborator/addCollaborator/{noteid}")
-	public ResponseEntity<Response> addCollaborator(@RequestHeader String token, @PathVariable int noteid,
+	@PostMapping("/addCollaborator/{noteId}")
+	public ResponseEntity<Response> addCollaborator(@RequestHeader String token, @PathVariable int noteId,
 			@RequestBody CollaboratorDto collaborator) {
-		Response response = collaboratorservice.addCollaborator(token, noteid, collaborator);
+		Response response = collaboratorService.addCollaborator(token, noteId, collaborator);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
 	// Get all collaborator list
-	@GetMapping("/collaborator/getCollaborator/{noteid}")
-	public ResponseEntity<Response> getCollaborator(@RequestHeader String token, @PathVariable int noteid){
-		Response response = collaboratorservice.getCollaborator(token, noteid);
+	@GetMapping("/getCollaborator/{noteId}")
+	public ResponseEntity<Response> getCollaborator(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = collaboratorService.getCollaborator(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
 	// Delete Collaborator
-	@DeleteMapping("/collaborator/addCollaborator/{noteid}")
-	public ResponseEntity<Response> deleteNote(@RequestHeader String token, @PathVariable int noteid,
+	@DeleteMapping("/addCollaborator/{noteId}")
+	public ResponseEntity<Response> deleteNote(@RequestHeader String token, @PathVariable int noteId,
 			@RequestBody CollaboratorDto collaborator) {
-		Response response = collaboratorservice.deleteCollaborator(token, noteid, collaborator);
+		Response response = collaboratorService.deleteCollaborator(token, noteId, collaborator);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 }

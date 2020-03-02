@@ -25,7 +25,7 @@ public class LabelEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String labelname;
+	private String labelName;
 	@ManyToMany
 	@JoinTable(name = "noteLabel", joinColumns = @JoinColumn(referencedColumnName = "id"))
 	private List<NoteEntity> noteList = new ArrayList<NoteEntity>();
@@ -38,12 +38,12 @@ public class LabelEntity {
 		this.id = id;
 	}
 
-	public String getLabelname() {
-		return labelname;
+	public String getLabelName() {
+		return labelName;
 	}
 
-	public void setLabelname(String labelname) {
-		this.labelname = labelname;
+	public void setLabelName(String labelName) {
+		this.labelName = labelName;
 	}
 
 	public List<NoteEntity> getNoteList() {

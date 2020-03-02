@@ -10,11 +10,11 @@ import com.bridgelabz.fundoonotesapi.response.Response;
 public interface ICollaboratorService {
 
 	// Add Collaborator
-	Response addCollaborator(String token,int noteid,CollaboratorDto collaboratorDto);
+	Response addCollaborator(String token,int noteId,CollaboratorDto collaboratorDto);
 	
 	// Get all Collaborator of Note
-	Response getCollaborator(String token,int noteid);
+	Response getCollaborator(String token,int noteId);
 	
 	// Delete Collaborator
-	Response deleteCollaborator(String token ,int noteid,CollaboratorDto collaboratorDto);
+	Response deleteCollaborator(String token ,int noteId,CollaboratorDto collaboratorDto);
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotesapi.dto.NoteDto;
@@ -23,149 +24,150 @@ import com.bridgelabz.fundoonotesapi.services.IReminderService;
  * @Purpose : This is RestApi Controller for Notes Operation.
  */
 @RestController
+@RequestMapping("/notes")
 public class NoteController {
 
 	@Autowired
-	INoteService noteservice;
+	INoteService noteService;
 
 	@Autowired
-	IReminderService reminderservice;
+	IReminderService reminderService;
 
 	// Create New Note
-	@PostMapping("/notes/createnote")
+	@PostMapping("/createNote")
 	public ResponseEntity<Response> createNote(@RequestHeader String token, @RequestBody NoteDto notedto) {
-		Response response = noteservice.createNote(token, notedto);
+		Response response = noteService.createNote(token, notedto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Show All Note
-	@GetMapping("/notes/getallnotes")
-	public ResponseEntity<Response> getallNotes(@RequestHeader String token) {
-		Response response = noteservice.getAllNotes(token);
+	@GetMapping("/getAllNotes")
+	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) {
+		Response response = noteService.getAllNotes(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Update Note
-	@PutMapping("/notes/updatenote/{id}")
-	public ResponseEntity<Response> updateNote(@RequestHeader String token, @PathVariable int id,
+	@PutMapping("/updateNote/{noteId}")
+	public ResponseEntity<Response> updateNote(@RequestHeader String token, @PathVariable int noteId,
 			@RequestBody NoteDto notedto) {
-		Response response = noteservice.updateNote(token, id, notedto);
+		Response response = noteService.updateNote(token, noteId, notedto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Delete Note
-	@DeleteMapping("/notes/deletenote/{id}")
-	public ResponseEntity<Response> deleteNote(@RequestHeader String token, @PathVariable int id) {
-		Response response = noteservice.deleteNote(token, id);
+	@DeleteMapping("/deleteNote/{noteId}")
+	public ResponseEntity<Response> deleteNote(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = noteService.deleteNote(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// archive or un-archive note by note id
-	@PutMapping("/notes/archiveOrUnarchive/{id}")
-	public ResponseEntity<Response> archiveOrUnarchive(@RequestHeader String token, @PathVariable int id) {
-		Response response = noteservice.archiveOrUnarchive(token, id);
+	@PutMapping("/isArchive/{noteId}")
+	public ResponseEntity<Response> isArchive(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = noteService.isArchive(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// pin or un-pin note by note id
-	@PutMapping("/notes/pinOrUnpin/{id}")
-	public ResponseEntity<Response> pinOrUnpin(@RequestHeader String token, @PathVariable int id) {
-		Response response = noteservice.pinOrUnpin(token, id);
+	@PutMapping("/isPin/{noteId}")
+	public ResponseEntity<Response> isPin(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = noteService.isPin(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// trash or un-trash note by note id
-	@PutMapping("/notes/trashOrUntrash/{id}")
-	public ResponseEntity<Response> trashOrUntrash(@RequestHeader String token, @PathVariable int id) {
-		Response response = noteservice.trashOrUntrash(token, id);
+	@PutMapping("/isTrash/{noteId}")
+	public ResponseEntity<Response> isTrash(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = noteService.isTrash(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Sort User Note by Title
-	@GetMapping("/notes/noteBytitle")
-	public ResponseEntity<Response> sortByNotetitle(@RequestHeader String token) {
-		Response response = noteservice.sortByNotetitle(token);
+	@GetMapping("/noteByTitle")
+	public ResponseEntity<Response> sortByNoteTitle(@RequestHeader String token) {
+		Response response = noteService.sortByNoteTitle(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Sort User Note by Description
-	@GetMapping("/notes/noteByDescription")
+	@GetMapping("/noteByDescription")
 	public ResponseEntity<Response> sortByNoteDesc(@RequestHeader String token) {
-		Response response = noteservice.sortByNoteDescription(token);
+		Response response = noteService.sortByNoteDescription(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Sort User Note by Reminder Date
-	@GetMapping("/notes/noteByReminderDate")
-	public ResponseEntity<Response> sortBydate(@RequestHeader String token) {
-		Response response = noteservice.sortByNoteDate(token);
+	@GetMapping("/noteByReminderDate")
+	public ResponseEntity<Response> sortByDate(@RequestHeader String token) {
+		Response response = noteService.sortByNoteDate(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Sort All Note by Title
-	@GetMapping("/notes/allNoteByTitle")
+	@GetMapping("/allNoteByTitle")
 	public ResponseEntity<Response> sortAllNoteByTitle() {
-		Response response = noteservice.sortAllNoteBytitle();
+		Response response = noteService.sortAllNoteByTitle();
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	/******************************* Reminder Api's *******************************/
 
 	// Add reminder to note
-	@PostMapping("/reminder/addreminder/{noteid}")
-	public ResponseEntity<Response> addReminder(@RequestHeader String token, @PathVariable int noteid,
+	@PostMapping("/reminder/addReminder/{noteId}")
+	public ResponseEntity<Response> addReminder(@RequestHeader String token, @PathVariable int noteId,
 			@RequestBody ReminderDto reminderDto) {
-		Response response = reminderservice.addReminder(token, noteid, reminderDto);
+		Response response = reminderService.addReminder(token, noteId, reminderDto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Show reminder
-	@GetMapping("/reminder/getreminder")
+	@GetMapping("/reminder/getReminder")
 	public ResponseEntity<Response> getReminder(@RequestHeader String token) {
-		Response response = reminderservice.getReminder(token);
+		Response response = reminderService.getReminder(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// update reminder
-	@PutMapping("/reminder/updatereminder/{noteid}")
-	public ResponseEntity<Response> updateReminder(@RequestHeader String token, @PathVariable int noteid,
+	@PutMapping("/reminder/updateReminder/{noteId}")
+	public ResponseEntity<Response> updateReminder(@RequestHeader String token, @PathVariable int noteId,
 			@RequestBody ReminderDto reminderDto) {
-		Response response = reminderservice.updateReminder(token, noteid, reminderDto);
+		Response response = reminderService.updateReminder(token, noteId, reminderDto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Delete reminder from note
-	@DeleteMapping("/reminder/deletereminder/{noteid}")
-	public ResponseEntity<Response> deleteReminder(@RequestHeader String token, @PathVariable int noteid) {
-		Response response = reminderservice.deleteReminder(token, noteid);
+	@DeleteMapping("/reminder/deleteReminder/{noteId}")
+	public ResponseEntity<Response> deleteReminder(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = reminderService.deleteReminder(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Set repeat Reminder to Daily option
-	@PutMapping("/reminder/repeatDaily/{noteid}")
-	public ResponseEntity<Response> repeatDaily(@RequestHeader String token, @PathVariable int noteid) {
-		Response response = reminderservice.repeatDaily(token, noteid);
+	@PutMapping("/reminder/repeatDaily/{noteId}")
+	public ResponseEntity<Response> repeatDaily(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = reminderService.repeatDaily(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Set repeat Reminder to Weekly option
-	@PutMapping("/reminder/repeatWeekly/{noteid}")
-	public ResponseEntity<Response> repeatWeekly(@RequestHeader String token, @PathVariable int noteid) {
-		Response response = reminderservice.repeatWeekly(token, noteid);
+	@PutMapping("/reminder/repeatWeekly/{noteId}")
+	public ResponseEntity<Response> repeatWeekly(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = reminderService.repeatWeekly(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Set repeat Reminder to Monthly option
-	@PutMapping("/reminder/repeatMonthly/{noteid}")
-	public ResponseEntity<Response> repeatMonthly(@RequestHeader String token, @PathVariable int noteid) {
-		Response response = reminderservice.repeatMonthly(token, noteid);
+	@PutMapping("/reminder/repeatMonthly/{noteId}")
+	public ResponseEntity<Response> repeatMonthly(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = reminderService.repeatMonthly(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Set repeat Reminder to Yearly option
-	@PutMapping("/reminder/repeatYearly/{noteid}")
-	public ResponseEntity<Response> repeatYearly(@RequestHeader String token, @PathVariable int noteid) {
-		Response response = reminderservice.repeatYearly(token, noteid);
+	@PutMapping("/reminder/repeatYearly/{noteId}")
+	public ResponseEntity<Response> repeatYearly(@RequestHeader String token, @PathVariable int noteId) {
+		Response response = reminderService.repeatYearly(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 }

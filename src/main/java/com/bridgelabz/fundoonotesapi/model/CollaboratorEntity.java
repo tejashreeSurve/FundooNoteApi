@@ -24,8 +24,8 @@ public class CollaboratorEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String mailreciver;
-	private String mailsender;
+	private String mailReciver;
+	private String mailSender;
 
 	@ManyToOne
 	@JoinColumn(name = "note_id", nullable = false)
@@ -39,20 +39,20 @@ public class CollaboratorEntity {
 		this.id = id;
 	}
 
-	public String getMailreciver() {
-		return mailreciver;
+	public String getMailReciver() {
+		return mailReciver;
 	}
 
-	public void setMailreciver(String mailreciver) {
-		this.mailreciver = mailreciver;
+	public void setMailReciver(String mailReciver) {
+		this.mailReciver = mailReciver;
 	}
 
-	public String getMailsender() {
-		return mailsender;
+	public String getMailSender() {
+		return mailSender;
 	}
 
-	public void setMailsender(String mailsender) {
-		this.mailsender = mailsender;
+	public void setMailSender(String mailSender) {
+		this.mailSender = mailSender;
 	}
 
 	public NoteEntity getNoteEntity() {

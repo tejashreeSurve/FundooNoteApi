@@ -1,16 +1,17 @@
 package com.bridgelabz.fundoonotesapi.dto;
+
 /**
  * @author Tejashree Surve
- * @Purpose : This is Data Transfer Object class for Notes Title Api's. 
+ * @Purpose : This is Data Transfer Object class for Notes Title Api's.
  */
 public class NoteTitleDto {
-	private String notetitle;
+	private String noteTitle;
 
-	public String getNotetitle() {
-		return notetitle;
+	public String getNoteTitle() {
+		return noteTitle;
 	}
 
-	public void setNotetitle(String notetitle) {
-		this.notetitle = notetitle;
+	public void setNoteTitle(String noteTitle) {
+		this.noteTitle = noteTitle;
 	}
 }

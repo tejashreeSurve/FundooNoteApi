@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Data Access Object class which is connect to DataBase Layer.
+ * @Purpose : This is Data Access Object class which is connect to DataBase
+ *          Layer.
  */
 @Component
 @Entity
@@ -23,14 +24,14 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String firstname;
-	private String lastname;
+	private String firstName;
+	private String lastName;
 	private String birthdate;
-	private String phonenumber;
+	private String phoneNumber;
 	private String city;
 	private String email;
-	private String userpassword;
-	private boolean isValidate;
+	private String userPassword;
+	private boolean isValidate = false;
 	private String profilePic;
 
 	@OneToMany(mappedBy = "userEntity")
@@ -44,20 +45,36 @@ public class UserEntity {
 		this.id = id;
 	}
 
-	public String getFirstname() {
-		return firstname;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLastname() {
-		return lastname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 
 	public String getBirthdate() {
@@ -66,14 +83,6 @@ public class UserEntity {
 
 	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
-	}
-
-	public String getPhonenumber() {
-		return phonenumber;
-	}
-
-	public void setPhonenumber(String phonenumber) {
-		this.phonenumber = phonenumber;
 	}
 
 	public String getCity() {
@@ -90,14 +99,6 @@ public class UserEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getUserpassword() {
-		return userpassword;
-	}
-
-	public void setUserpassword(String userpassword) {
-		this.userpassword = userpassword;
 	}
 
 	public boolean getIsValidate() {

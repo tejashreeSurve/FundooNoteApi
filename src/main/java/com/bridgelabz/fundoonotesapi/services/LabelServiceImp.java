@@ -2,6 +2,7 @@ package com.bridgelabz.fundoonotesapi.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,7 @@ import com.bridgelabz.fundoonotesapi.utility.JwtToken;
 public class LabelServiceImp implements ILabelService {
 
 	@Autowired
-	JwtToken jwttoken;
+	JwtToken jwtToken;
 
 	@Autowired
 	UserRepository userRepository;
@@ -55,140 +56,139 @@ public class LabelServiceImp implements ILabelService {
 
 	// Add Label
 	@Override
-	public Response addLabel(String token, int id, LabelDto labeldto) {
-		String email = jwttoken.getToken(token);
+	public Response createLabel(String token, LabelDto labelDto) {
+		String email = jwtToken.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		// check if user is present or not
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
 					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		NoteEntity notedata = noteRepository.findById(id);
-
-		// check if note is present or not
-		if (notedata == null)
-			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("note.notexist"), message.Note_Not_Exist);
-		else {
-			// setting list of notes in LabelEntity to list
-			LabelEntity labelEntity = mapper.map(labeldto, LabelEntity.class);
-			List<NoteEntity> notelist = labelEntity.getNoteList();
-			notelist.add(notedata);
-			labelEntity.setNoteList(notelist);
-			// setting the list of label in NoteEntity to list
-			List<LabelEntity> labellist = notedata.getLabelList();
-			labellist.add(labelEntity);
-			notedata.setLabelList(labellist);
+		
+//			// setting list of notes in LabelEntity to list
+			LabelEntity labelEntity = mapper.map(labelDto, LabelEntity.class);
+//			List<NoteEntity> noteList = labelEntity.getNoteList();
+//			noteList.add(noteData);
+//			labelEntity.setNoteList(noteList);
+//			// setting the list of label in NoteEntity to list
+//			List<LabelEntity> labelList = noteData.getLabelList();
+//			labelList.add(labelEntity);
+//			noteData.setLabelList(labelList);
 
 			labelRepository.save(labelEntity);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 					environment.getProperty("label.create"), message.Label_Create);
-		}
+		
 	}
 
 	// Get all Label of User
 	@Override
-	public Response getAlllabel(String token) {
-		String email = jwttoken.getToken(token);
+	public Response getAllLabel(String token) {
+		String email = jwtToken.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
 					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		List<NoteEntity> notelist = noteRepository.findAll();
-		// this list contains all notes which is related to user
-		List<NoteEntity> listOfNotes = notelist.stream()
-				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
-		List<LabelEntity> labellist = new ArrayList<LabelEntity>();
-		// this for loop get all label present in that notes list
-		for (int i = 0; i < listOfNotes.size(); i++) {
-			for (int j = 0; j < listOfNotes.get(i).getLabelList().size(); j++) {
-				labellist.add(listOfNotes.get(i).getLabelList().get(j));
-			}
+//		List<NoteEntity> noteList = noteRepository.findAll();
+//		// this list contains all notes which is related to user
+//		List<NoteEntity> listOfNotes = noteList.stream()
+//				.filter(userData -> userData.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
+//		List<LabelEntity> labelList = new ArrayList<LabelEntity>();
+//		// this for loop get all label present in that notes list
+//		for (int i = 0; i < listOfNotes.size(); i++) {
+//			for (int j = 0; j < listOfNotes.get(i).getLabelList().size(); j++) {
+//				labelList.add(listOfNotes.get(i).getLabelList().get(j));
+//			}
+//		}
+		
+		List<LabelEntity> labelList = new ArrayList<LabelEntity>();
+		for (NoteEntity noteEntity : user.getNoteEntity()) {
+		for(LabelEntity labelEntity : noteEntity.getLabelList()) {	
+			labelList.add(labelEntity);
+		}
 		}
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("label.getAllLabels"), labellist);
+		environment.getProperty("label.getAllLabels"), labelList);
 	}
 
 	// Update Label
 	@Override
-	public Response updateLabel(String token, int id, LabelDto labeldto) {
-		String email = jwttoken.getToken(token);
+	public Response updateLabel(String token, int id, LabelDto labelDto) {
+		String email = jwtToken.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		
 		LabelEntity labelData = labelRepository.findById(id);
-		if (labelData == null)
+		if (labelRepository.findById(id) == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
-					environment.getProperty("label.notexist"), message.Label_Not_Exist);
-		labelData.setLabelname(labeldto.getLabelname());
+			environment.getProperty("label.notexist"), message.Label_Not_Exist);
+		
+		labelData.setLabelName(labelDto.getLabelName());
 		labelRepository.save(labelData);
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("label.update"), message.Label_Update);
+		environment.getProperty("label.update"), message.Label_Update);
 	}
 
 	// Delete Label
 	@Override
-	public Response deleteLabel(String token, int id) {
-		String email = jwttoken.getToken(token);
+	public Response deleteLabel(String token, int labelId) {
+		String email = jwtToken.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
+		
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		LabelEntity labelData = labelRepository.findById(id);
-		if (labelData == null)
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		
+		if (labelRepository.findById(labelId) == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
-					environment.getProperty("label.notexist"), message.Label_Not_Exist);
-		labelRepository.deleteById(id);
+			environment.getProperty("label.notexist"), message.Label_Not_Exist);
+		
+		labelRepository.deleteById(labelId);
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("label.delete"), message.Label_Delete);
+		environment.getProperty("label.delete"), message.Label_Delete);
 	}
 
 	// Get Notes where Label is present by Id
 	@Override
-	public Response getNoteByLabelId(int labelid) {
-		LabelEntity labelData = labelRepository.findById(labelid);
-		if (labelData == null)
+	public Response getNoteByLabelName(String token,int labelId) {
+		String email = jwtToken.getToken(token);
+		UserEntity user = userRepository.findByEmail(email);
+		
+		if (user == null)
+			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
+			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+		
+		if (labelRepository.findById(labelId) == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
-					environment.getProperty("label.notexist"), message.Label_Not_Exist);
-		List<NoteEntity> notelist = noteRepository.findAll();
-		List<LabelEntity> notes = new ArrayList<LabelEntity>();
-		// this for loop will get all notes where label id == id
-		for (int i = 0; i < notelist.size(); i++) {
-			for (int j = 0; j < notelist.get(i).getLabelList().size(); j++) {
-				if (notelist.get(i).getLabelList().get(j).getId() == labelid)
-					notes.add(notelist.get(i).getLabelList().get(j));
-			}
-		}
+			environment.getProperty("label.notexist"), message.Label_Not_Exist);
+//		if (labelData == null)
+//			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
+//					environment.getProperty("label.notexist"), message.Label_Not_Exist);
+//		List<NoteEntity> notelist = noteRepository.findAll();
+//		List<LabelEntity> notes = new ArrayList<LabelEntity>();
+//		// this for loop will get all notes where label id == id
+//		for (int i = 0; i < notelist.size(); i++) {
+//			for (int j = 0; j < notelist.get(i).getLabelList().size(); j++) {
+//				if (notelist.get(i).getLabelList().get(j).getId() == labelid)
+//					notes.add(notelist.get(i).getLabelList().get(j));
+//			}
+//		}
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("note.getallnotes"), notes);
-	}
-
-	// Get all Notes where Label is present by Label Name
-	@Override
-	public Response getNoteByLabelName(LabelDto labeldto) {
-		List<NoteEntity> notelist = noteRepository.findAll();
-		List<LabelEntity> notes = new ArrayList<LabelEntity>();
-		// this for loop will get all notes where label name is equal to name
-		for (int i = 0; i < notelist.size(); i++) {
-			for (int j = 0; j < notelist.get(i).getLabelList().size(); j++) {
-				if (notelist.get(i).getLabelList().get(j).getLabelname().equals(labeldto.getLabelname()))
-					notes.add(notelist.get(i).getLabelList().get(j));
-			}
-		}
-		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("note.getallnotes"), notes);
+				environment.getProperty("note.getallnotes"), labelRepository.findById(labelId).getNoteList());
 	}
 
 	// Change Label by Label ID's
 	@Override
-	public Response changeLabel(ChangeLabelDto changelabel) {
-		LabelEntity labelOldData = labelRepository.findById(changelabel.getPreLabelId());
-		LabelEntity labelChangeData = labelRepository.findById(changelabel.getChangeLabelId());
+	public Response changeLabel(ChangeLabelDto changeLabel) {
+		LabelEntity labelOldData = labelRepository.findById(changeLabel.getPreLabelId());
+		LabelEntity labelChangeData = labelRepository.findById(changeLabel.getChangeLabelId());
 		if (labelOldData == null || labelChangeData == null) {
 			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
 					environment.getProperty("label.notexist"), message.Label_Not_Exist);
 		}
-		labelChangeData.setLabelname(labelOldData.getLabelname());
+		labelChangeData.setLabelName(labelOldData.getLabelName());
 		labelRepository.save(labelChangeData);
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("label.change"), message.Label_Change);
@@ -197,26 +197,28 @@ public class LabelServiceImp implements ILabelService {
 	// Sort Label by Title
 	@Override
 	public Response sortLabelByTitle(String token) {
-		String email = jwttoken.getToken(token);
+		String email = jwtToken.getToken(token);
+		//Optional<UserEntity> user = Optional.of(userRepository.findByEmail(email));
 		UserEntity user = userRepository.findByEmail(email);
 		if (user == null)
 			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
 					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		List<NoteEntity> notelist = noteRepository.findAll();
-		// this list contains all notes which is related to user
-		List<NoteEntity> listOfNotes = notelist.stream()
-				.filter(userdata -> userdata.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
-		List<LabelEntity> labellist = new ArrayList<LabelEntity>();
+//		List<NoteEntity> noteList = noteRepository.findAll();
+//		// this list contains all notes which is related to user
+//		List<NoteEntity> listOfNotes = noteList.stream()
+//				.filter(userData -> userData.getUserEntity().getId() == user.getId()).collect(Collectors.toList());
+		
+		List<LabelEntity> labelList = new ArrayList<LabelEntity>();
 		// this is provide label list
-		for (NoteEntity noteEntity : listOfNotes) {
+		for (NoteEntity noteEntity :  user.getNoteEntity()) {
 			for (LabelEntity label : noteEntity.getLabelList()) {
-				labellist.add(label);
+				labelList.add(label);
 			}
 		}
 		// sort list by label name
-		List<LabelEntity> sortedList = labellist.stream()
-				.sorted((list1, list2) -> list1.getLabelname().compareTo(list2.getLabelname()))
-				.collect(Collectors.toList());
+		List<LabelEntity> sortedList = labelList.stream()
+		.sorted((list1, list2) -> list1.getLabelName().compareTo(list2.getLabelName()))
+		.collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("label.getAllLabels"), sortedList);
 	}
@@ -224,10 +226,9 @@ public class LabelServiceImp implements ILabelService {
 	// Sort all Label
 	@Override
 	public Response sortAllLabel() {
-		List<LabelEntity> labellist = labelRepository.findAll();
-		List<LabelEntity> sortedList = labellist.stream()
-				.sorted((list1, list2) -> list1.getLabelname().compareTo(list2.getLabelname()))
-				.collect(Collectors.toList());
+		List<LabelEntity> sortedList = labelRepository.findAll().stream()
+		.sorted((list1, list2) -> list1.getLabelName().compareTo(list2.getLabelName()))
+		.collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("label.getAllLabels"), sortedList);
 	}

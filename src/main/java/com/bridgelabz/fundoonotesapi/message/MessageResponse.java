@@ -11,22 +11,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageResponse {
 	// send mail for verification 
-	public SimpleMailMessage verifyMail(String reciveremail, String recivername, String token) {
+	public SimpleMailMessage verifyMail(String reciverEmail, String reciverName, String token) {
 		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(reciveremail);
+		message.setTo(reciverEmail);
 		message.setFrom("forgotbridge70@gmail.com");
 		message.setSubject("Complete Verification!!!! ");
-		message.setText("Hi, " + recivername + "  Your email is verify with " + " Token :- " + token);
+		message.setText("Hi, " + reciverName + " ,\n"+" Your email is verify with " + " Token :- http://localhost:8083/userRegistration/validation/" + token);
 		return message;
 	}
 
 	// send mail for forgot password
-	public SimpleMailMessage passwordReset(String reciveremail, String recivername, String token) {
+	public SimpleMailMessage passwordReset(String reciverEmail, String reciverName, String token) {
 		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(reciveremail);
+		message.setTo(reciverEmail);
 		message.setFrom("forgotbridge70@gmail.com");
 		message.setSubject("Reset Password!!!! ");
-		message.setText("Hi, " + recivername + "  For reset Password, your token is " + "  Token :- " + token);
+		message.setText("Hi, " + reciverName + "  For reset Password, your token is " + "  Token :- " + token);
 		return message;
 	}
 }

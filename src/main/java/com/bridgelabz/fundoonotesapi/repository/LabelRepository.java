@@ -13,5 +13,5 @@ public interface LabelRepository extends JpaRepository<LabelEntity, Integer> {
 	LabelEntity findById(int id);
 
 	// find data by label name
-	LabelEntity findByLabelname(String name);
+	LabelEntity findByLabelName(String labelName);
 }
