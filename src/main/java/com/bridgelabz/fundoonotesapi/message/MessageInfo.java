@@ -27,7 +27,7 @@ public class MessageInfo {
 
 	public String Login_Done = "Loged-In Successfully";
 
-	public String Invalide_Password = "Please Try with other Password";
+	public String Invalide_Password = "Password is incorrect";
 
 	public String User_Not_Exist = "Please try with another Email-id";
 
@@ -94,6 +94,8 @@ public class MessageInfo {
 	/************************* message for collaborator ***********************/
 	
 	public String Collaborator = "You can add new Collaborator";
+	
+	public String Reciver_Email_Collaborator = "Email is already Exist or Please Enter valide Email";
 	
 	/************************* Profile Pic ***********************************/
 	

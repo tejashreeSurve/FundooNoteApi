@@ -41,6 +41,4 @@ public interface INoteService {
 	// sort user note by note description
 	Response sortByNoteDescription(String token);
 
-	// sort user note by reminder date
-	Response sortByNoteDate(String token);
 }

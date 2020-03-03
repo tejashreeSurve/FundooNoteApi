@@ -45,8 +45,8 @@ public class CollaboratorController {
 	// Delete Collaborator
 	@DeleteMapping("/addCollaborator/{noteId}")
 	public ResponseEntity<Response> deleteNote(@RequestHeader String token, @PathVariable int noteId,
-			@RequestBody CollaboratorDto collaborator) {
-		Response response = collaboratorService.deleteCollaborator(token, noteId, collaborator);
+			@PathVariable int collaboratorId) {
+		Response response = collaboratorService.deleteCollaborator(token, noteId, collaboratorId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 }

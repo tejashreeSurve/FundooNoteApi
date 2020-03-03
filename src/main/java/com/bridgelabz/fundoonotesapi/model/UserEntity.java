@@ -36,6 +36,9 @@ public class UserEntity {
 
 	@OneToMany(mappedBy = "userEntity")
 	private List<NoteEntity> noteEntity;
+	
+	@OneToMany(mappedBy = "userEntity")
+	private List<LabelEntity> labelEntity;
 
 	public int getId() {
 		return id;
@@ -127,5 +130,13 @@ public class UserEntity {
 
 	public void setProfilePic(String profilePic) {
 		this.profilePic = profilePic;
+	}
+
+	public List<LabelEntity> getLabelEntity() {
+		return labelEntity;
+	}
+
+	public void setLabelEntity(List<LabelEntity> labelEntity) {
+		this.labelEntity = labelEntity;
 	}
 }

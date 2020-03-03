@@ -10,9 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Tejashree Surve
@@ -21,14 +24,20 @@ import org.springframework.stereotype.Component;
 @Component
 @Entity
 @Table(name = "label")
+@JsonIgnoreProperties({"userEntity"})
 public class LabelEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String labelName;
+	
 	@ManyToMany
 	@JoinTable(name = "noteLabel", joinColumns = @JoinColumn(referencedColumnName = "id"))
 	private List<NoteEntity> noteList = new ArrayList<NoteEntity>();
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private UserEntity userEntity;
 
 	public int getId() {
 		return id;
@@ -52,5 +61,13 @@ public class LabelEntity {
 
 	public void setNoteList(List<NoteEntity> noteList) {
 		this.noteList = noteList;
+	}
+
+	public UserEntity getUserEntity() {
+		return userEntity;
+	}
+
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
 	}
 }

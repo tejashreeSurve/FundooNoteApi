@@ -72,4 +72,10 @@ public class GlobalException {
 		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
 				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(ReciverEmailofCollaborator.class)
+	public ResponseEntity<Response> ReciverEmailofCollaborator(Exception e){
+		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
+				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
+	}
 }

@@ -30,10 +30,9 @@ public class LabelController {
 	ILabelService labelService;
 
 	// Create New Label
-	@PostMapping("/createLabel/{id}")
-	public ResponseEntity<Response> createLabel(@RequestHeader String token, @PathVariable int id,
-			@RequestBody LabelDto labeldto) {
-		Response response = labelService.addLabel(token, id, labeldto);
+	@PostMapping("/createLabel")
+	public ResponseEntity<Response> createLabel(@RequestHeader String token, @RequestBody LabelDto labeldto) {
+		Response response = labelService.createLabel(token, labeldto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
@@ -45,10 +44,10 @@ public class LabelController {
 	}
 
 	// Update label
-	@PutMapping("/updateLabel/{labelId}")
-	public ResponseEntity<Response> updateLabel(@RequestHeader String token, @PathVariable int labelId,
+	@PutMapping("/editLabel/{labelId}")
+	public ResponseEntity<Response> editLabel(@RequestHeader String token, @PathVariable int labelId,
 			@RequestBody LabelDto labeldto) {
-		Response response = labelService.updateLabel(token, labelId, labeldto);
+		Response response = labelService.editLabel(token, labelId, labeldto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
@@ -59,14 +58,7 @@ public class LabelController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
-	/******************* Notes operation **********************/
 
-	// Show Note By Label Name
-	@GetMapping("/getNoteByLabelName/{labelId}")
-	public ResponseEntity<Response> getNoteByLabelName(@RequestHeader String token,@PathVariable int labelId) {
-		Response response = labelService.getNoteByLabelName(token,labelId);
-		return new ResponseEntity<Response>(response, HttpStatus.OK);
-	}
 
 	/********************* Sort Label operation *********************/
 
@@ -74,13 +66,6 @@ public class LabelController {
 	@PutMapping("/changeLabel")
 	public ResponseEntity<Response> changeLabel(@RequestBody ChangeLabelDto changelabel) {
 		Response response = labelService.changeLabel(changelabel);
-		return new ResponseEntity<Response>(response, HttpStatus.OK);
-	}
-
-	// Sort all Label By Name
-	@GetMapping("/sortAllLabelByName")
-	public ResponseEntity<Response> sortAllLabelByName() {
-		Response response = labelService.sortAllLabel();
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 

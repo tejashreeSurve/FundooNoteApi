@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -75,7 +76,7 @@ public class UserServiceImp implements IUserService {
 		UserEntity user = userRepository.findByEmail(loginUser.getEmail());
 		String token = jwtObject.generateToken(loginUser.getEmail());
 		System.out.println(token);
-		
+	//	Optional<UserEntity> user = userRepository.findByEmail(loginUser.getEmail());
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		

@@ -16,5 +16,5 @@ public interface ICollaboratorService {
 	Response getCollaborator(String token,int noteId);
 	
 	// Delete Collaborator
-	Response deleteCollaborator(String token ,int noteId,CollaboratorDto collaboratorDto);
+	Response deleteCollaborator(String token ,int noteId,int collaborator);
 }

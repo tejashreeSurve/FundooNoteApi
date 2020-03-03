@@ -240,34 +240,6 @@ public class NoteServiceImp implements INoteService {
 		environment.getProperty("note.getallnotes"), sortedList);
 	}
 
-	// Sort User Notes by Reminder Date
-	@Override
-	public Response sortByNoteDate(String token) {
-		String email = jwtOperation.getToken(token);
-		UserEntity user = userRepository.findByEmail(email);
-		
-		
-		 if (user == null)
-			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-	
-		if (user.getNoteEntity() == null)
-			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-			environment.getProperty("note.notexist"), message.Note_Not_Exist);
-//		
-//		for (NoteEntity noteEntity : user.getNoteEntity()) {
-//			if(noteEntity.getReminderEntity() == null )
-//				throw new ReminderNotPresentException(message.Reminder_isNotPresent);
-//		}
-		
-		// stream feature is used to sort the list
-				List<NoteEntity> sortedList = user.getNoteEntity().stream()
-						.sorted((list1, list2) -> list1.getReminderEntity().getTime().compareTo(list2.getReminderEntity().getTime()))
-						.collect(Collectors.toList());
-				return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-						environment.getProperty("note.getallnotes"), sortedList);
-	}
-
 	// Sort User Notes by Note Description
 	@Override
 	public Response sortByNoteDescription(String token) {

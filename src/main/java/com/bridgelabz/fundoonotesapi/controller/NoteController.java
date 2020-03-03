@@ -97,13 +97,6 @@ public class NoteController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
-	// Sort User Note by Reminder Date
-	@GetMapping("/noteByReminderDate")
-	public ResponseEntity<Response> sortByDate(@RequestHeader String token) {
-		Response response = noteService.sortByNoteDate(token);
-		return new ResponseEntity<Response>(response, HttpStatus.OK);
-	}
-
 	// Sort All Note by Title
 	@GetMapping("/allNoteByTitle")
 	public ResponseEntity<Response> sortAllNoteByTitle() {

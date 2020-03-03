@@ -16,7 +16,7 @@ public interface ILabelService {
 	Response getAllLabel(String token);
 	
 	// update label
-	Response updateLabel(String token, int labelId, LabelDto labelDto);
+	Response editLabel(String token, int labelId, LabelDto labelDto);
 	
 	// delete label
 	Response deleteLabel(String token, int labelId);
@@ -29,7 +29,4 @@ public interface ILabelService {
 	
 	// sort label by title
 	Response sortLabelByTitle(String token);
-	
-	// sort all label by title
-	Response sortAllLabel();
 }
