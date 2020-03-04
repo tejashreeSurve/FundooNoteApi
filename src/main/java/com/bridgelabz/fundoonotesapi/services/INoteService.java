@@ -16,12 +16,18 @@ public interface INoteService {
 
 	// get all note
 	Response getAllNotes(String token);
+	
+	// get note by label id
+	Response getNoteByLabelId(String token, int labelId);
 
 	// update note
 	Response updateNote(String token, int noteId, NoteDto noteDto);
 	
 	// delete note
 	Response deleteNote(String token, int noteId);
+	
+	// add label in note
+	Response addLabelInNote(String token, int noteId, int labelId);
 
 	// pin or un-pin note
 	Response isPin(String token, int noteId);
@@ -31,9 +37,6 @@ public interface INoteService {
 
 	// trash or un-trash note
 	Response isTrash(String token, int noteId);
-
-	// sort all notes by title
-	Response sortAllNoteByTitle();
 
 	// sort user note by note title
 	Response sortByNoteTitle(String token);

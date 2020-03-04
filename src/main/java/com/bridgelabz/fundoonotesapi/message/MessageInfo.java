@@ -69,7 +69,7 @@ public class MessageInfo {
 	
 	public String Label_Change = "Label Name is been changed";
 	
-	public String Label_Create = "Label is Successfully created in given Note";
+	public String Label_Create = "Label is Successfully added in given Note";
 	
 	public String Label_Update = "Label is Successfully updated";
 	

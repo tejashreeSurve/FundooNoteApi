@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.bridgelabz.fundoonotesapi.dto.CollaboratorDto;
+import com.bridgelabz.fundoonotesapi.exception.LoginException;
+import com.bridgelabz.fundoonotesapi.exception.NoteNotFoundException;
 import com.bridgelabz.fundoonotesapi.exception.ReciverEmailofCollaborator;
 import com.bridgelabz.fundoonotesapi.message.MessageInfo;
 import com.bridgelabz.fundoonotesapi.model.CollaboratorEntity;
@@ -60,10 +62,9 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 		UserEntity user = userRepository.findByEmail(email);
 		// check if user is present or not
 		if (user == null)
-			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-			environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+			throw new LoginException(message.User_Not_Exist);
 		// check if note is present or not
-		if (user.getNoteEntity().contains((noteRepository.findById(noteId)))) {
+		if (user.getNoteList().contains((noteRepository.findById(noteId)))) {
 			for (UserEntity userEntity : userRepository.findAll()) {
 				for(CollaboratorEntity collaborator : collaboRepository.findAll()) {
 				if(userEntity.getEmail().equals(collaboratorDto.getReciver()) && !collaborator.getMailReciver().equals(collaboratorDto.getReciver())) {
@@ -80,8 +81,7 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 			}
 			throw new ReciverEmailofCollaborator(message.Reciver_Email_Collaborator);
 		}
-		return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-				environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		throw new NoteNotFoundException(message.Note_Not_Exist);
 	}
 
 	// Get All Collaborator
@@ -91,10 +91,8 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 		UserEntity user = userRepository.findByEmail(email);
 		// check if user is present or not
 		if (user == null)
-			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
-		// check if note is present or not
-		if(user.getNoteEntity().contains((noteRepository.findById(noteId)))) {
+			throw new LoginException(message.User_Not_Exist);
+		if(user.getNoteList().contains((noteRepository.findById(noteId)))) {
 			if(noteRepository.findById(noteId).getCollaboratorList() == null)
 				return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
 				environment.getProperty("collaborator.isnotpresent"), message.Collaborator);
@@ -103,8 +101,7 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 					environment.getProperty("collaborator.display"), noteRepository.findById(noteId).getCollaboratorList());
 				}
 			}
-				return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-				environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		throw new NoteNotFoundException(message.Note_Not_Exist);
 	}
 
 	// Delete Collaborator
@@ -114,18 +111,15 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 		UserEntity user = userRepository.findByEmail(email);
 		// check if user is present or not
 		if (user == null)
-			return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-					environment.getProperty("status.email.notexist"), message.User_Not_Exist);
+			throw new LoginException(message.User_Not_Exist);
 		// check if note is present or not
-		if(user.getNoteEntity().contains((noteRepository.findById(noteId)))) {
+		if(user.getNoteList().contains((noteRepository.findById(noteId)))) {
 			if(noteRepository.findById(noteId).getCollaboratorList() == null)
 				return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
 				environment.getProperty("collaborator.isnotpresent"), message.Collaborator);
-			else {
+			else 
 				collaboRepository.deleteById(collaboratorId);
-			}
 		}
-		return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-		environment.getProperty("note.notexist"), message.Note_Not_Exist);
+		throw new NoteNotFoundException(message.Note_Not_Exist);
 	}
 }

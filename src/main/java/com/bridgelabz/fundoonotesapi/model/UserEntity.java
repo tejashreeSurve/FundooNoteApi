@@ -35,10 +35,10 @@ public class UserEntity {
 	private String profilePic;
 
 	@OneToMany(mappedBy = "userEntity")
-	private List<NoteEntity> noteEntity;
+	private List<NoteEntity> noteList;
 	
 	@OneToMany(mappedBy = "userEntity")
-	private List<LabelEntity> labelEntity;
+	private List<LabelEntity> labelList;
 
 	public int getId() {
 		return id;
@@ -112,14 +112,6 @@ public class UserEntity {
 		this.isValidate = isValidate;
 	}
 
-	public List<NoteEntity> getNoteEntity() {
-		return noteEntity;
-	}
-
-	public void setNoteEntity(List<NoteEntity> noteEntity) {
-		this.noteEntity = noteEntity;
-	}
-
 	public void setValidate(boolean isValidate) {
 		this.isValidate = isValidate;
 	}
@@ -132,11 +124,19 @@ public class UserEntity {
 		this.profilePic = profilePic;
 	}
 
-	public List<LabelEntity> getLabelEntity() {
-		return labelEntity;
+	public List<NoteEntity> getNoteList() {
+		return noteList;
 	}
 
-	public void setLabelEntity(List<LabelEntity> labelEntity) {
-		this.labelEntity = labelEntity;
+	public void setNoteList(List<NoteEntity> noteList) {
+		this.noteList = noteList;
+	}
+
+	public List<LabelEntity> getLabelList() {
+		return labelList;
+	}
+
+	public void setLabelList(List<LabelEntity> labelList) {
+		this.labelList = labelList;
 	}
 }

@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoonotesapi.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +35,7 @@ public class UserController {
 
 	// Register RestApi method
 	@PostMapping("/register")
-	public ResponseEntity<Response> registrationUser(@RequestBody UserDto user) {
+	public ResponseEntity<Response> registrationUser(@Valid @RequestBody UserDto user) {
 		Response response = userService.registration(user);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}

@@ -40,10 +40,25 @@ public class NoteController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
+	// Create New Note
+	@PostMapping("/addLabelInNote/{noteId}/{labelId}")
+	public ResponseEntity<Response> addLabelInNote(@RequestHeader String token, @PathVariable int noteId,
+			@PathVariable int labelId) {
+		Response response = noteService.addLabelInNote(token, noteId, labelId);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+
 	// Show All Note
 	@GetMapping("/getAllNotes")
 	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) {
 		Response response = noteService.getAllNotes(token);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+
+	// Show All Note by LabelId
+	@GetMapping("/getNoteByLabelId/{labelId}")
+	public ResponseEntity<Response> getNoteByLabelId(@RequestHeader String token, @PathVariable int labelId) {
+		Response response = noteService.getNoteByLabelId(token, labelId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
@@ -94,13 +109,6 @@ public class NoteController {
 	@GetMapping("/noteByDescription")
 	public ResponseEntity<Response> sortByNoteDesc(@RequestHeader String token) {
 		Response response = noteService.sortByNoteDescription(token);
-		return new ResponseEntity<Response>(response, HttpStatus.OK);
-	}
-
-	// Sort All Note by Title
-	@GetMapping("/allNoteByTitle")
-	public ResponseEntity<Response> sortAllNoteByTitle() {
-		Response response = noteService.sortAllNoteByTitle();
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 

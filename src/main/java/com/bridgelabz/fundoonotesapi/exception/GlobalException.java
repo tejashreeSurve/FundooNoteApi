@@ -78,4 +78,16 @@ public class GlobalException {
 		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
 				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(NoteNotFoundException.class)
+	public ResponseEntity<Response> NoteNotFoundException(Exception e){
+		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
+				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(LabelNotExistException.class)
+	public ResponseEntity<Response> LabelNotExistException(Exception e){
+		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
+				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
+	}
 }

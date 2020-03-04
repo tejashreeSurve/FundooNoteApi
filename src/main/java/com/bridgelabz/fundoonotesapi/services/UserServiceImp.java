@@ -76,14 +76,15 @@ public class UserServiceImp implements IUserService {
 		UserEntity user = userRepository.findByEmail(loginUser.getEmail());
 		String token = jwtObject.generateToken(loginUser.getEmail());
 		System.out.println(token);
-	//	Optional<UserEntity> user = userRepository.findByEmail(loginUser.getEmail());
+//		Optional<UserEntity> optional = userRepository.findById(52);
+		// check if user is present or not
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
-		
+		// check is has done validation or not
 		if (user.getIsValidate()) {
 			if ((user.getUserPassword()).equals(loginUser.getUserPassword())) {
 				return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("status.login.success"), message.Login_Done);
+				environment.getProperty("status.login.success"), token);
 			} else {
 				return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
 				environment.getProperty("status.password.incorrect"), message.Invalide_Password);
@@ -99,6 +100,7 @@ public class UserServiceImp implements IUserService {
 	public Response validateUser(String token) {
 		String email = jwtObject.getToken(token);
 		UserEntity userIsVerified = userRepository.findByEmail(email);
+		// check if user is present or not
 		if (userIsVerified == null)
 			throw new ValidateException(message.User_Not_Exist);
 		userIsVerified.setIsValidate(true);
@@ -112,6 +114,7 @@ public class UserServiceImp implements IUserService {
 	public Response registration(UserDto user) {
 		String checkEmail = user.getEmail();
 		UserEntity userIsPresent = userRepository.findByEmail(checkEmail);
+		// check if user is present or not
 		if (userIsPresent != null) 
 			throw new RegistrationException(message.User_Exist);
 		UserEntity userData = mapper.map(user, UserEntity.class);
@@ -128,10 +131,9 @@ public class UserServiceImp implements IUserService {
 	@Override
 	public Response forgetPassword(EmailForgetPasswordDto emailForgetPassword) {
 		UserEntity user = userRepository.findByEmail(emailForgetPassword.getEmail());
-		
+		// check if user is present or not
 		if (user == null)
 			throw new ForgetPasswordException(message.User_Exist);
-		
 		// check whether user is done with validation or not
 		if (user.getIsValidate()) {
 			String token = jwtObject.generateToken(emailForgetPassword.getEmail());
@@ -152,10 +154,10 @@ public class UserServiceImp implements IUserService {
 	public Response resetPassword(String token, ResetPasswordDto passwordReset) {
 		String checkEmail = jwtObject.getToken(token);
 		UserEntity userUpdate = userRepository.findByEmail(checkEmail);
-		
+		// check if user is present or not
 		if (userUpdate == null)
 			throw new ResetPasswordException(message.User_Exist);
-		
+		// check if confirm password is equal to password
 		if (passwordReset.getConfirmPassword().equals(passwordReset.getPassword())) {
 			userUpdate.setUserPassword(passwordReset.getPassword());
 			userRepository.save(userUpdate);
@@ -190,9 +192,9 @@ public class UserServiceImp implements IUserService {
 		String email = jwtObject.getToken(token);
 		// check whether user is present or not
 		UserEntity user = userRepository.findByEmail(email);
+		System.out.println(file);
 		if (user == null) 
 			throw new ValidateException(message.User_Not_Exist);
-		
 		// file is not selected to upload
 		if (file.isEmpty())
 			throw new FileIsEmpty(message.File_Is_Empty);

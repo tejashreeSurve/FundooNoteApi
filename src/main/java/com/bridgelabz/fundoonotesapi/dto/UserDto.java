@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotesapi.dto;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -10,19 +11,24 @@ import org.springframework.lang.NonNull;
  * @Purpose : This is Data Transfer Object that holds Data for User Api's.
  */
 public class UserDto {
-	@NotNull
+	@NotEmpty
 	private String firstName;
-	@NotNull
+	@NotEmpty
 	private String lastName;
+	@NotEmpty
 	@Pattern(regexp = "((([0]{1}[1-9]{1})|([1]{1}[0-9]{1})|([2]{1}[0-9]{1})|([3]{1}[0-1]{1}))/(([0]{1}[1-9]{1})|([1]{1}[0-2]{1}))/([1-9]{1}[0-9]{1}[0-9]{1}[1-9]{1}))", message = "Please Enter valide date")
 	private String birthdate;
+	@NotEmpty
 	@Pattern(regexp = "^\\d{10}", message = "Please Enter valide Phone-Number")
 	private String phoneNumber;
-	@NonNull
+	
+	@NotEmpty
 	private String city;
+	@NotEmpty
 	@Pattern(regexp = "\"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@\"\n"
 			+ "+ \"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$\"", message = "Please Enter valide Email")
 	private String email;
+	@NotEmpty
 	@Pattern(regexp = "(?=.*[0-9])", message = "Password must contain at least one numeric value")
 	private String userPassword;
 
