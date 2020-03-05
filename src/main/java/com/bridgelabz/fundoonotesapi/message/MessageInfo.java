@@ -63,6 +63,8 @@ public class MessageInfo {
 	
 	public String Note_Delete = "Note is Deleted from Note List";
 	
+	public String Note_Not_Exist_User = "Note does not belong to User";
+	
 	/************************ messages for label *************************/
 	
 	public String Label_Not_Exist = "No Label present with this Id";
@@ -74,6 +76,8 @@ public class MessageInfo {
 	public String Label_Update = "Label is Successfully updated";
 	
 	public String Label_Delete = "You can create/add new Label in Note";
+	
+	public String Label_Already_Exist = "Label is already exist in Note";
 	
 	/************************* messages for Reminder *************************/
 	
@@ -95,7 +99,11 @@ public class MessageInfo {
 	
 	public String Collaborator = "You can add new Collaborator";
 	
-	public String Reciver_Email_Collaborator = "Email is already Exist or Please Enter valide Email";
+	public String Email_Not_Exist = "Such Email not Exist, Please Enter Valide Email !!!!";
+	
+	public String Reciver_Email_Already_Exist = "Reciver Email is Already Exist,Please Enter Valide Email !!!!";
+	
+	public String Collaborator_Not_Exist = "Collabortors Not Exist";
 	
 	/************************* Profile Pic ***********************************/
 	

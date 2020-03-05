@@ -13,9 +13,6 @@ public interface NoteRepository extends JpaRepository<NoteEntity, Integer> {
 	// find data by Note title
 	NoteEntity findByTitle(String title);
 
-	// find data by Note Id
-	NoteEntity findById(int noteId);
-
 	// find data by user
 	NoteEntity findByUserEntity(UserEntity userData);
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.bridgelabz.fundoonotesapi.dto.CollaboratorDto;
+import com.bridgelabz.fundoonotesapi.exception.CollaboratorNotExist;
 import com.bridgelabz.fundoonotesapi.exception.LoginException;
 import com.bridgelabz.fundoonotesapi.exception.NoteNotFoundException;
 import com.bridgelabz.fundoonotesapi.exception.ReciverEmailofCollaborator;
@@ -63,25 +64,32 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 		// check if user is present or not
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
-		// check if note is present or not
-		if (user.getNoteList().contains((noteRepository.findById(noteId)))) {
+		// check if note exist or not
+		NoteEntity noteEntity = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// check if it belong to user note
+		if (noteEntity.getUserEntity().getId() == user.getId()) {
+			// this check if reciver Email exist in user database
 			for (UserEntity userEntity : userRepository.findAll()) {
-				for(CollaboratorEntity collaborator : collaboRepository.findAll()) {
-				if(userEntity.getEmail().equals(collaboratorDto.getReciver()) && !collaborator.getMailReciver().equals(collaboratorDto.getReciver())) {
-				// save data into collaborator tabel
-				CollaboratorEntity collaboratorData = mapper.map(collaboratorDto, CollaboratorEntity.class);
-				collaboratorData.setMailReciver(collaboratorDto.getReciver());
-				collaboratorData.setMailSender(user.getEmail());
-				collaboratorData.setNoteEntity(noteRepository.findById(noteId));
-				collaboRepository.save(collaboratorData);
-				return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("collaborator.add"), message.Collaborator);
-				}
+				if (userEntity.getEmail().equals(collaboratorDto.getReciver())) {
+					// this throw exception when reciver email is already present or collaborate
+					for (CollaboratorEntity collaborator : noteEntity.getCollaboratorList()) {
+						if (!collaborator.getMailReciver().equals(collaboratorDto.getReciver()))
+							throw new ReciverEmailofCollaborator(message.Reciver_Email_Already_Exist);
+					}
+					// save data into collaborator table
+					CollaboratorEntity collaboratorData = mapper.map(collaboratorDto, CollaboratorEntity.class);
+					collaboratorData.setMailReciver(collaboratorDto.getReciver());
+					collaboratorData.setMailSender(user.getEmail());
+					collaboratorData.setNoteEntity(noteEntity);
+					collaboRepository.save(collaboratorData);
+					return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+					environment.getProperty("collaborator.add"), message.Collaborator);
 				}
 			}
-			throw new ReciverEmailofCollaborator(message.Reciver_Email_Collaborator);
+			throw new ReciverEmailofCollaborator(message.Email_Not_Exist);
 		}
-		throw new NoteNotFoundException(message.Note_Not_Exist);
+		throw new NoteNotFoundException(message.Note_Not_Exist_User);
 	}
 
 	// Get All Collaborator
@@ -92,16 +100,18 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 		// check if user is present or not
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
-		if(user.getNoteList().contains((noteRepository.findById(noteId)))) {
-			if(noteRepository.findById(noteId).getCollaboratorList() == null)
-				return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-				environment.getProperty("collaborator.isnotpresent"), message.Collaborator);
-			else {
-					return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-					environment.getProperty("collaborator.display"), noteRepository.findById(noteId).getCollaboratorList());
-				}
-			}
-		throw new NoteNotFoundException(message.Note_Not_Exist);
+		// check if note exist or not
+		NoteEntity noteEntity = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// check if it belong to user note
+		if (noteEntity.getUserEntity().getId() == user.getId()) {
+			if (noteEntity.getCollaboratorList() == null)
+				throw new CollaboratorNotExist(message.Collaborator_Not_Exist);
+			else
+				return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+				environment.getProperty("collaborator.display"), noteEntity.getCollaboratorList());
+		}
+		throw new NoteNotFoundException(message.Note_Not_Exist_User);
 	}
 
 	// Delete Collaborator
@@ -112,14 +122,21 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 		// check if user is present or not
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
-		// check if note is present or not
-		if(user.getNoteList().contains((noteRepository.findById(noteId)))) {
-			if(noteRepository.findById(noteId).getCollaboratorList() == null)
-				return new Response(Integer.parseInt(environment.getProperty("status.bad.code")),
-				environment.getProperty("collaborator.isnotpresent"), message.Collaborator);
-			else 
-				collaboRepository.deleteById(collaboratorId);
-		}
-		throw new NoteNotFoundException(message.Note_Not_Exist);
+		// check if note exist or not
+		NoteEntity noteEntity = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// check if collaborator id exist or not
+		CollaboratorEntity collaboratorEntity = collaboRepository.findById(collaboratorId)
+				.orElseThrow(() -> new CollaboratorNotExist(message.Collaborator_Not_Exist));
+		// check if note belong to user note
+		if (noteEntity.getUserEntity().getId() != user.getId())
+			throw new NoteNotFoundException(message.Note_Not_Exist);
+		// check if collaborator is exist in note else throw exception
+		if (collaboratorEntity.getNoteEntity().getId() == noteId) {
+			collaboRepository.deleteById(collaboratorId);
+			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+			environment.getProperty("collaborator.delete"), message.Collaborator);
+		} else
+			throw new CollaboratorNotExist(message.Collaborator_Not_Exist);
 	}
 }

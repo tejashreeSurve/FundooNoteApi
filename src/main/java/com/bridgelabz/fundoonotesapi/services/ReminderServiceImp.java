@@ -65,9 +65,10 @@ public class ReminderServiceImp implements IReminderService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether user has note or not
-		NoteEntity noteEntity = noteRepository.findById(noteId);
+		NoteEntity noteEntity = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// if present then check if note belong to user
 		if (!user.getNoteList().contains(noteEntity))
-			throw new NoteNotFoundException(message.Note_Not_Exist);
+			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		// check if reminder is present or not
 		if (noteEntity.getReminderEntity() == null) {
 			ReminderEntity reminderData = mapper.map(reminderDto, ReminderEntity.class);
@@ -110,9 +111,10 @@ public class ReminderServiceImp implements IReminderService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether user has note or not
-		NoteEntity noteEntity = noteRepository.findById(noteId);
-		if (noteEntity == null)
-			throw new NoteNotFoundException(message.Note_Not_Exist);
+		NoteEntity noteEntity = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// if present then check if note belong to user
+		if (!user.getNoteList().contains(noteEntity))
+			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		// check if reminder is present or not
 		if (noteEntity.getReminderEntity() != null) {
 			ReminderEntity reminderData = noteEntity.getReminderEntity();
@@ -134,9 +136,10 @@ public class ReminderServiceImp implements IReminderService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether user has note or not
-		NoteEntity noteEntity = noteRepository.findById(noteId);
-		if (noteEntity == null)
-			throw new NoteNotFoundException(message.Note_Not_Exist);
+		NoteEntity noteEntity = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// if present then check if note belong to user
+		if (!user.getNoteList().contains(noteEntity))
+			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		// check if reminder is present or not
 		if (noteEntity.getReminderEntity() != null) {
 			ReminderEntity reminderData = noteEntity.getReminderEntity();
@@ -157,9 +160,10 @@ public class ReminderServiceImp implements IReminderService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether user has note or not
-		NoteEntity noteEntity = noteRepository.findById(noteId);
-		if (noteEntity == null)
-			throw new NoteNotFoundException(message.Note_Not_Exist);
+		NoteEntity noteEntity = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// check if reminder is present or not
+		if(!user.getNoteList().contains(noteEntity))
+			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		// check if reminder is present or not
 		if (noteEntity.getReminderEntity() != null) {
 			if ((noteEntity.getReminderEntity().isRepeatMonthly() == false)
@@ -184,9 +188,10 @@ public class ReminderServiceImp implements IReminderService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether user has note or not
-		NoteEntity noteEntity = noteRepository.findById(noteId);
-		if (noteEntity == null)
-			throw new NoteNotFoundException(message.Note_Not_Exist);
+		NoteEntity noteEntity = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// if present then check if note belong to user
+		if (noteEntity.getUserEntity().getId() != user.getId())
+			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		// check if reminder is present or not
 		if (noteEntity.getReminderEntity() != null) {
 			if ((noteEntity.getReminderEntity().isRepeatMonthly() == false)
@@ -211,9 +216,10 @@ public class ReminderServiceImp implements IReminderService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether user has note or not
-		NoteEntity noteEntity = noteRepository.findById(noteId);
-		if (noteEntity == null)
-			throw new NoteNotFoundException(message.Note_Not_Exist);
+		NoteEntity noteEntity = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// if present then check if note belong to user
+		if (!user.getNoteList().contains(noteEntity))
+			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		// check if reminder is present or not
 		if (noteEntity.getReminderEntity() != null) {
 			if ((noteEntity.getReminderEntity().isRepeatDaily() == false)
@@ -238,9 +244,10 @@ public class ReminderServiceImp implements IReminderService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether user has note or not
-		NoteEntity noteEntity = noteRepository.findById(noteId);
-		if (noteEntity == null)
-			throw new NoteNotFoundException(message.Note_Not_Exist);
+		NoteEntity noteEntity = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		// if present then check if note belong to user
+		if (!user.getNoteList().contains(noteEntity))
+			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		// check if reminder is present or not
 		if (noteEntity.getReminderEntity() != null) {
 			if ((noteEntity.getReminderEntity().isRepeatMonthly() == false)

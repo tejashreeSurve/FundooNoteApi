@@ -90,4 +90,16 @@ public class GlobalException {
 		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
 				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(LabelAlreadyExist.class)
+	public ResponseEntity<Response> LabelAlreadyExist(Exception e){
+		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
+				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(CollaboratorNotExist.class)
+	public ResponseEntity<Response> CollaboratorNotExist(Exception e){
+		return new ResponseEntity<Response>(new Response (Integer.parseInt(message.Bad_Request),
+				e.getMessage(),"Please try again!!!"),HttpStatus.BAD_REQUEST);
+	}
 }

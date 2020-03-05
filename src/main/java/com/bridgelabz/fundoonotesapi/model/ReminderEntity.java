@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoonotesapi.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,7 +28,7 @@ public class ReminderEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	@NonNull
-	private String date;
+	private Date date;
 	@NonNull
 	private String time;
 	private boolean repeatDaily;
@@ -47,11 +49,11 @@ public class ReminderEntity {
 		this.id = id;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

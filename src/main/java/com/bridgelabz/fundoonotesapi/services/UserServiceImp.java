@@ -76,7 +76,6 @@ public class UserServiceImp implements IUserService {
 		UserEntity user = userRepository.findByEmail(loginUser.getEmail());
 		String token = jwtObject.generateToken(loginUser.getEmail());
 		System.out.println(token);
-//		Optional<UserEntity> optional = userRepository.findById(52);
 		// check if user is present or not
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);

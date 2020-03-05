@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotesapi.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -35,10 +36,10 @@ public class UserEntity {
 	private String profilePic;
 
 	@OneToMany(mappedBy = "userEntity")
-	private List<NoteEntity> noteList;
+	private List<NoteEntity> noteList = new ArrayList<NoteEntity>();
 	
 	@OneToMany(mappedBy = "userEntity")
-	private List<LabelEntity> labelList;
+	private List<LabelEntity> labelList = new ArrayList<LabelEntity>();
 
 	public int getId() {
 		return id;
