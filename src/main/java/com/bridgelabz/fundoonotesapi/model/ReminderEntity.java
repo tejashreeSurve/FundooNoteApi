@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +29,8 @@ public class ReminderEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	@NonNull
-	private Date date;
-	@NonNull
-	private String time;
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
+	private Date dateAndTime;
 	private boolean repeatDaily;
 	private boolean repeatWeekly;
 	private boolean repeatMonthly;
@@ -49,20 +49,12 @@ public class ReminderEntity {
 		this.id = id;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getDateAndTime() {
+		return dateAndTime;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
+	public void setDateAndTime(Date dateAndTime) {
+		this.dateAndTime = dateAndTime;
 	}
 
 	public boolean isRepeatDaily() {

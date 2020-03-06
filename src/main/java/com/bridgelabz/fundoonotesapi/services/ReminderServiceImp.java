@@ -2,7 +2,6 @@ package com.bridgelabz.fundoonotesapi.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import com.bridgelabz.fundoonotesapi.repository.ReminderRepository;
 import com.bridgelabz.fundoonotesapi.repository.UserRepository;
 import com.bridgelabz.fundoonotesapi.response.Response;
 import com.bridgelabz.fundoonotesapi.utility.JwtToken;
+import com.sun.istack.logging.Logger;
 
 /**
  * @author Tejashree Surve
@@ -55,6 +55,8 @@ public class ReminderServiceImp implements IReminderService {
 
 	@Autowired
 	ReminderRepository reminderRepository;
+	
+	private static final Logger LOGGER = Logger.getLogger(NoteServiceImp.class);
 
 	// add reminder to note
 	@Override
@@ -70,14 +72,16 @@ public class ReminderServiceImp implements IReminderService {
 		if (!user.getNoteList().contains(noteEntity))
 			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		// check if reminder is present or not
-		if (noteEntity.getReminderEntity() == null) {
+		if (noteEntity.getReminderEntity() == null) { 
 			ReminderEntity reminderData = mapper.map(reminderDto, ReminderEntity.class);
+			reminderData.setDateAndTime(reminderDto.getDate());
 			reminderData.setNoteEntity(noteEntity);
 			reminderRepository.save(reminderData);
+			LOGGER.info("reminder is successfully inserted into table");
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 			environment.getProperty("reminder.add"), message.Reminder_isSet);
 		}
-		throw new ReminderNotPresentException(message.Reminder_isNotPresent);
+		throw new ReminderNotPresentException(message.Reminder_isPresent);
 	}
 
 	// show all note which contain reminder
@@ -118,9 +122,9 @@ public class ReminderServiceImp implements IReminderService {
 		// check if reminder is present or not
 		if (noteEntity.getReminderEntity() != null) {
 			ReminderEntity reminderData = noteEntity.getReminderEntity();
-			reminderData.setDate(reminderDto.getDate());
-			reminderData.setTime(reminderDto.getTime());
+			reminderData.setDateAndTime(reminderDto.getDate());
 			reminderRepository.save(reminderData);
+			LOGGER.info("reminder is updated successfully and save into table");
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 			environment.getProperty("reminder.update"), message.Reminder_isUpdate);
 		}
@@ -144,6 +148,7 @@ public class ReminderServiceImp implements IReminderService {
 		if (noteEntity.getReminderEntity() != null) {
 			ReminderEntity reminderData = noteEntity.getReminderEntity();
 			reminderRepository.deleteById(reminderData.getId());
+			LOGGER.info("records is successfully deleted from table");
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 			environment.getProperty("reminder.delete"), message.Reminder_Delete);
 		}

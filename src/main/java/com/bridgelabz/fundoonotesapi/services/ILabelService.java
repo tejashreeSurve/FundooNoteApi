@@ -1,6 +1,5 @@
 package com.bridgelabz.fundoonotesapi.services;
 
-import com.bridgelabz.fundoonotesapi.dto.ChangeLabelDto;
 import com.bridgelabz.fundoonotesapi.dto.LabelDto;
 import com.bridgelabz.fundoonotesapi.response.Response;
 
@@ -23,9 +22,6 @@ public interface ILabelService {
 	
 	// get label by id
 	Response getNoteByLabelName(String token, int labelId);
-	
-	// change label
-	Response changeLabel(ChangeLabelDto changeLabel);
 	
 	// sort label by title
 	Response sortLabelByTitle(String token);

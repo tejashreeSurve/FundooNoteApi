@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bridgelabz.fundoonotesapi.dto.ChangeLabelDto;
 import com.bridgelabz.fundoonotesapi.dto.LabelDto;
 import com.bridgelabz.fundoonotesapi.response.Response;
 import com.bridgelabz.fundoonotesapi.services.ILabelService;
@@ -58,16 +57,7 @@ public class LabelController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
-
-
 	/********************* Sort Label operation *********************/
-
-	// Change Label By passing Id
-	@PutMapping("/changeLabel")
-	public ResponseEntity<Response> changeLabel(@RequestBody ChangeLabelDto changelabel) {
-		Response response = labelService.changeLabel(changelabel);
-		return new ResponseEntity<Response>(response, HttpStatus.OK);
-	}
 
 	// Sort user Label By Name
 	@GetMapping("/sortLabelByName")

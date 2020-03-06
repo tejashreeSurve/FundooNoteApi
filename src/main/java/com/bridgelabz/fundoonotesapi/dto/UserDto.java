@@ -1,10 +1,7 @@
 package com.bridgelabz.fundoonotesapi.dto;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
-import org.springframework.lang.NonNull;
 
 /**
  * @author Tejashree Surve

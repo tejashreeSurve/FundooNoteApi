@@ -51,9 +51,9 @@ public class MessageInfo {
 	
 	public String Note_UnArchive = "You can Archive it agin";
 	
-	public String Note_UnTrash = "You can Trash it again";
+	public String Note_UnTrash = "Note is Successfully Restored !!!!";
 	
-	public String Note_Trash = "You can UnTrash it again";
+	public String Note_Trash = "Note is Successfully Delete and Added into Trash !!!!";
 	
 	public String Note_Label_Not_Exist = "No Note with this Label";
 	
@@ -61,9 +61,11 @@ public class MessageInfo {
 	
 	public String Note_Update = "Note is Update Successfully";
 	
-	public String Note_Delete = "Note is Deleted from Note List";
+	public String Note_Delete = "Note is Permanently Deleted from Note List";
 	
 	public String Note_Not_Exist_User = "Note does not belong to User";
+	
+	public String Note_Not_Exist_In_Trash = "Note does not Exist in Trash";
 	
 	/************************ messages for label *************************/
 	
@@ -81,7 +83,7 @@ public class MessageInfo {
 	
 	/************************* messages for Reminder *************************/
 	
-	public String Reminder_isPresent = "Cannot Add Reminder";
+	public String Reminder_isPresent = "Cannot Add Reminder, Reminder is already present";
 	
 	public String Reminder_isNotPresent = "Please First add Reminder to Note";
 	

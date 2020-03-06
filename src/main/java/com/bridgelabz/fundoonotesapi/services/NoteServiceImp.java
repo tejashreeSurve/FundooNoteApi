@@ -1,6 +1,5 @@
 package com.bridgelabz.fundoonotesapi.services;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +14,7 @@ import com.bridgelabz.fundoonotesapi.dto.NoteDto;
 import com.bridgelabz.fundoonotesapi.exception.LabelAlreadyExist;
 import com.bridgelabz.fundoonotesapi.exception.LabelNotExistException;
 import com.bridgelabz.fundoonotesapi.exception.LoginException;
+import com.bridgelabz.fundoonotesapi.exception.NoteNotExistInTrash;
 import com.bridgelabz.fundoonotesapi.exception.NoteNotFoundException;
 import com.bridgelabz.fundoonotesapi.message.MessageInfo;
 import com.bridgelabz.fundoonotesapi.model.LabelEntity;
@@ -25,6 +25,7 @@ import com.bridgelabz.fundoonotesapi.repository.NoteRepository;
 import com.bridgelabz.fundoonotesapi.repository.UserRepository;
 import com.bridgelabz.fundoonotesapi.response.Response;
 import com.bridgelabz.fundoonotesapi.utility.JwtToken;
+import com.sun.istack.logging.Logger;
 
 /**
  * @author Tejashree Surve
@@ -58,6 +59,8 @@ public class NoteServiceImp implements INoteService {
 
 	@Autowired
 	LabelRepository labelRepository;
+	
+	private static final Logger LOGGER = Logger.getLogger(NoteServiceImp.class);
 
 	// Create New Note
 	@Override
@@ -70,8 +73,9 @@ public class NoteServiceImp implements INoteService {
 		NoteEntity noteData = mapper.map(noteDto, NoteEntity.class);
 		noteData.setUserEntity(user);
 		noteRepository.save(noteData);
+		LOGGER.info("Note successfully created into Note table");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("note.create"), message.Note_Create);
+				environment.getProperty("note.create"), message.Note_Create);
 	}
 
 	// add Label in Note
@@ -82,7 +86,8 @@ public class NoteServiceImp implements INoteService {
 		// check whether user is present or not
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
-		NoteEntity noteData = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		NoteEntity noteData = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
 		// check whether note is present or not
 		if ((noteData == null) || (noteData.getUserEntity().getId() != user.getId()))
 			throw new NoteNotFoundException(message.Note_Not_Exist);
@@ -105,8 +110,9 @@ public class NoteServiceImp implements INoteService {
 				labelEntity.setNoteList(listOfNote);
 				noteRepository.save(noteData);
 				labelRepository.save(labelEntity);
+				LOGGER.info("Label is Successfully added into the Note");
 				return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-				environment.getProperty("label.add"), message.Label_Create);
+						environment.getProperty("label.add"), message.Label_Create);
 			}
 		}
 		throw new LabelNotExistException(message.Label_Not_Exist);
@@ -123,8 +129,10 @@ public class NoteServiceImp implements INoteService {
 		// check whether user has note or not
 		if (user.getNoteList() == null)
 			throw new NoteNotFoundException(message.Note_Not_Exist);
+		List<NoteEntity> allNotes = user.getNoteList().stream().filter(noteData -> !noteData.isTrash())
+				.collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("note.getallnotes"), user.getNoteList());
+				environment.getProperty("note.getallnotes"), allNotes);
 	}
 
 	// get all Note by Label Id
@@ -138,8 +146,10 @@ public class NoteServiceImp implements INoteService {
 		// check whether user has note or not
 		if (user.getNoteList() == null)
 			throw new NoteNotFoundException(message.Note_Not_Exist);
+		LabelEntity labelEntity = labelRepository.findById(labelId)
+				.orElseThrow(() -> new LabelNotExistException(message.Label_Not_Exist));
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("note.getallnotes"), labelRepository.findById(labelId).getNoteList());
+				environment.getProperty("note.getallnotes"), labelEntity.getNoteList());
 	}
 
 	// Update Note
@@ -151,15 +161,17 @@ public class NoteServiceImp implements INoteService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether note is present or not
-		NoteEntity noteData = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		NoteEntity noteData = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
 		// if present then check if note belong to user
 		if (noteData.getUserEntity().getId() != user.getId())
 			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		noteData.setDescription(noteDto.getDescription());
 		noteData.setTitle(noteDto.getTitle());
 		noteRepository.save(noteData);
+		LOGGER.info("Note is successfully update and saved in tabel");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("note.update"), message.Note_Update);
+				environment.getProperty("note.update"), message.Note_Update);
 	}
 
 	// Delete Note
@@ -171,27 +183,32 @@ public class NoteServiceImp implements INoteService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether note is present or not
-		NoteEntity noteData = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		NoteEntity noteData = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
 		// if present then check if note belong to user
 		if (noteData.getUserEntity().getId() != user.getId())
 			throw new NoteNotFoundException(message.Note_Not_Exist_User);
-		noteRepository.deleteById(noteId);
-		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("note.delete"), message.Note_Delete);
+		// if isTrash is true then only it will delete note permanently else throw exception
+		if (noteData.isTrash() == true) {
+			noteRepository.deleteById(noteId);
+			LOGGER.info("Note is successfully deleted from Note table");
+			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
+					environment.getProperty("note.delete"), message.Note_Delete);
+		}
+		throw new NoteNotExistInTrash(message.Note_Not_Exist_In_Trash);
 	}
 
 	// Pin or UnPin Note
 	@Override
 	public Response isPin(String token, int noteId) {
-//		Date date = new Date();
-//		System.out.println(date);
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		// check whether user is present or not
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether note is present or not
-		NoteEntity noteData = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		NoteEntity noteData = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
 		// if present then check if note belong to user
 		if (noteData.getUserEntity().getId() != user.getId())
 			throw new NoteNotFoundException(message.Note_Not_Exist);
@@ -200,12 +217,12 @@ public class NoteServiceImp implements INoteService {
 			noteData.setPin(true);
 			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-			environment.getProperty("note.ispin"), message.Note_Pin);
+					environment.getProperty("note.ispin"), message.Note_Pin);
 		} else {
 			noteData.setPin(false);
 			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-			environment.getProperty("note.isunpin"), message.Note_UnPin);
+					environment.getProperty("note.isunpin"), message.Note_UnPin);
 		}
 	}
 
@@ -218,7 +235,8 @@ public class NoteServiceImp implements INoteService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether note is present or not
-		NoteEntity noteData = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		NoteEntity noteData = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
 		// if present then check if note belong to user
 		if (noteData.getUserEntity().getId() != user.getId())
 			throw new NoteNotFoundException(message.Note_Not_Exist_User);
@@ -227,12 +245,12 @@ public class NoteServiceImp implements INoteService {
 			noteData.setArchive(true);
 			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-			environment.getProperty("note.isarchive"), message.Note_Archive);
+					environment.getProperty("note.isarchive"), message.Note_Archive);
 		} else {
 			noteData.setArchive(false);
 			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-			environment.getProperty("note.isunarchive"), message.Note_UnArchive);
+					environment.getProperty("note.isunarchive"), message.Note_UnArchive);
 		}
 	}
 
@@ -245,7 +263,8 @@ public class NoteServiceImp implements INoteService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check whether note is present or not
-		NoteEntity noteData = noteRepository.findById(noteId).orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
+		NoteEntity noteData = noteRepository.findById(noteId)
+				.orElseThrow(() -> new NoteNotFoundException(message.Note_Not_Exist));
 		// if present then check if note belong to user
 		if (noteData.getUserEntity().getId() != user.getId())
 			throw new NoteNotFoundException(message.Note_Not_Exist_User);
@@ -254,12 +273,12 @@ public class NoteServiceImp implements INoteService {
 			noteData.setTrash(true);
 			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-			environment.getProperty("note.istrash"), message.Note_Trash);
+					environment.getProperty("note.istrash"), message.Note_Trash);
 		} else {
 			noteData.setTrash(false);
 			noteRepository.save(noteData);
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-			environment.getProperty("note.isuntrash"), message.Note_UnTrash);
+					environment.getProperty("note.isuntrash"), message.Note_UnTrash);
 		}
 	}
 
@@ -280,7 +299,7 @@ public class NoteServiceImp implements INoteService {
 		List<NoteEntity> sortedList = user.getNoteList().stream()
 				.sorted((list1, list2) -> list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("note.getallnotes"), sortedList);
+				environment.getProperty("note.getallnotes"), sortedList);
 	}
 
 	// Sort User Notes by Note Description
@@ -299,6 +318,6 @@ public class NoteServiceImp implements INoteService {
 				.sorted((list1, list2) -> list1.getDescription().compareTo(list2.getDescription()))
 				.collect(Collectors.toList());
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("note.getallnotes"), sortedList);
+				environment.getProperty("note.getallnotes"), sortedList);
 	}
 }

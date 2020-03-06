@@ -10,7 +10,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.bridgelabz.fundoonotesapi.dto.ChangeLabelDto;
 import com.bridgelabz.fundoonotesapi.dto.LabelDto;
 import com.bridgelabz.fundoonotesapi.exception.LabelNotExistException;
 import com.bridgelabz.fundoonotesapi.exception.LoginException;
@@ -22,6 +21,7 @@ import com.bridgelabz.fundoonotesapi.repository.NoteRepository;
 import com.bridgelabz.fundoonotesapi.repository.UserRepository;
 import com.bridgelabz.fundoonotesapi.response.Response;
 import com.bridgelabz.fundoonotesapi.utility.JwtToken;
+import com.sun.istack.logging.Logger;
 
 /**
  * @author Tejashree Surve
@@ -52,6 +52,8 @@ public class LabelServiceImp implements ILabelService {
 
 	@Autowired
 	MessageInfo message;
+	
+	private static final Logger LOGGER = Logger.getLogger(NoteServiceImp.class);
 
 	// Add Label
 	@Override
@@ -64,6 +66,7 @@ public class LabelServiceImp implements ILabelService {
 		LabelEntity labelEntity = mapper.map(labelDto, LabelEntity.class);
 		labelEntity.setUserEntity(user);
 		labelRepository.save(labelEntity);
+		LOGGER.info("User is successfully inserted into table");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 		environment.getProperty("label.create"), message.Label_Create);
 	}
@@ -92,10 +95,10 @@ public class LabelServiceImp implements ILabelService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check if label is present or not
-		LabelEntity labelData = labelRepository.findById(labelId);
-		if (labelRepository.findById(labelId) == null)
-			throw new LabelNotExistException(message.Label_Not_Exist);labelData.setLabelName(labelDto.getLabelName());
+		LabelEntity labelData = labelRepository.findById(labelId).orElseThrow(() ->new LabelNotExistException(message.Label_Not_Exist));
+		labelData.setLabelName(labelDto.getLabelName());
 		labelRepository.save(labelData);
+		LOGGER.info("label is successfully updated and save into table");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 		environment.getProperty("label.update"), message.Label_Update);
 	}
@@ -112,25 +115,11 @@ public class LabelServiceImp implements ILabelService {
 		if (labelRepository.findById(labelId) == null)
 			throw new LabelNotExistException(message.Label_Not_Exist);
 		labelRepository.deleteById(labelId);
+		LOGGER.info("label is successfully deleted from table");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 		environment.getProperty("label.delete"), message.Label_Delete);
 	}
 
-	// Change Label by Label ID's
-	@Override
-	public Response changeLabel(ChangeLabelDto changeLabel) {
-		LabelEntity labelOldData = labelRepository.findById(changeLabel.getPreLabelId());
-		LabelEntity labelChangeData = labelRepository.findById(changeLabel.getChangeLabelId());
-		if (labelOldData == null || labelChangeData == null) {
-			return new Response(Integer.parseInt(environment.getProperty("status.redirect.code")),
-			environment.getProperty("label.notexist"), message.Label_Not_Exist);
-		}
-		labelChangeData.setLabelName(labelOldData.getLabelName());
-		labelRepository.save(labelChangeData);
-		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("label.change"), message.Label_Change);
-	}
-	
 	// Get Notes where Label is present by Id
 	@Override
 	public Response getNoteByLabelName(String token, int labelId) {
@@ -140,10 +129,9 @@ public class LabelServiceImp implements ILabelService {
 		if (user == null)
 			throw new LoginException(message.User_Not_Exist);
 		// check if label is present or not
-		if (labelRepository.findById(labelId) == null)
-			throw new LabelNotExistException(message.Label_Not_Exist);
+		LabelEntity labelEntity = labelRepository.findById(labelId).orElseThrow(() -> new LabelNotExistException(message.Label_Not_Exist));
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
-		environment.getProperty("note.getallnotes"), labelRepository.findById(labelId).getNoteList());
+		environment.getProperty("note.getallnotes"), labelEntity.getNoteList());
 	}
 
 	// Sort Label by Title

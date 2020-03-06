@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoonotesapi.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -117,7 +119,7 @@ public class NoteController {
 	// Add reminder to note
 	@PostMapping("/reminder/addReminder/{noteId}")
 	public ResponseEntity<Response> addReminder(@RequestHeader String token, @PathVariable int noteId,
-			@RequestBody ReminderDto reminderDto) {
+		@Valid	@RequestBody ReminderDto reminderDto) {
 		Response response = reminderService.addReminder(token, noteId, reminderDto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
