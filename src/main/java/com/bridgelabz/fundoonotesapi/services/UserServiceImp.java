@@ -37,6 +37,7 @@ import com.bridgelabz.fundoonotesapi.utility.EmailSenderService;
 import com.bridgelabz.fundoonotesapi.utility.JwtToken;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.sun.istack.logging.Logger;
 
 /**
  * @author Tejashree Surve
@@ -67,6 +68,8 @@ public class UserServiceImp implements IUserService {
 
 	@Autowired
 	private MessageInfo message;
+	
+	private static final Logger LOGGER = Logger.getLogger(NoteServiceImp.class);
 
 	// Login operation
 	@Override
@@ -80,6 +83,7 @@ public class UserServiceImp implements IUserService {
 		// check is has done validation or not
 		if (user.getIsValidate()) {
 			if ((user.getUserPassword()).equals(loginUser.getUserPassword())) {
+				LOGGER.info("login successfully done");
 				return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("status.login.success"), token);
 			} else {
@@ -102,6 +106,7 @@ public class UserServiceImp implements IUserService {
 			throw new ValidateException(message.User_Not_Exist);
 		userIsVerified.setIsValidate(true);
 		userRepository.save(userIsVerified);
+		LOGGER.info("IsValidate is successfully set to true");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 		environment.getProperty("status.email.isverify"), message.Verify_User);
 	}
@@ -120,6 +125,7 @@ public class UserServiceImp implements IUserService {
 		email = messageResponse.verifyMail(userData.getEmail(), userData.getFirstName(), token);
 		emailSenderService.sendEmail(email);
 		userRepository.save(userData);
+		LOGGER.info("User Data is Successfully saved in table");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 		environment.getProperty("status.user.register"), message.Registration_Done);
 	}
@@ -158,6 +164,7 @@ public class UserServiceImp implements IUserService {
 		if (passwordReset.getConfirmPassword().equals(passwordReset.getPassword())) {
 			userUpdate.setUserPassword(passwordReset.getPassword());
 			userRepository.save(userUpdate);
+			LOGGER.info("Password is successfully update and saved in table");
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 			environment.getProperty("status.password.update"), message.Update_Password);
 		} else {
