@@ -11,7 +11,7 @@ public class ElasticSearchConfiguration {
 	
 	@Bean(destroyMethod = "close")
 	public RestHighLevelClient client() {
-		RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9300)));
+		RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200,"http")));
 	return client;
 	}
 }

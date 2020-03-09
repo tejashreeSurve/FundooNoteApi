@@ -120,7 +120,7 @@ public class NoteServiceImp implements INoteService {
 
 	// Get all Notes
 	@Override
-	public Response getAllNotes(String token) {
+	public Response getAllNotes(String token)  {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		// check whether user is present or not
