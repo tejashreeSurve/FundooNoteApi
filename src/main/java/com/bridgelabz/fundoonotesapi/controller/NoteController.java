@@ -37,7 +37,7 @@ public class NoteController {
 
 	// Create New Note
 	@PostMapping("/createNote")
-	public ResponseEntity<Response> createNote(@RequestHeader String token, @RequestBody NoteDto notedto) {
+	public ResponseEntity<Response> createNote(@RequestHeader String token, @RequestBody NoteDto notedto) throws Exception{
 		Response response = noteService.createNote(token, notedto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
@@ -52,7 +52,7 @@ public class NoteController {
 
 	// Show All Note
 	@GetMapping("/getAllNotes")
-	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) {
+	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) throws Exception{
 		Response response = noteService.getAllNotes(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}

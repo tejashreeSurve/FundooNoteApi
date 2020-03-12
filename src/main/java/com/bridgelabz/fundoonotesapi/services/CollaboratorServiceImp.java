@@ -71,7 +71,7 @@ public class CollaboratorServiceImp implements ICollaboratorService {
 				if (userEntity.getEmail().equals(collaboratorDto.getReciver())) {
 					// this throw exception when reciver email is already present or collaborate
 					for (CollaboratorEntity collaborator : noteEntity.getCollaboratorList()) {
-						if (!collaborator.getMailReciver().equals(collaboratorDto.getReciver()))
+						if (collaborator.getMailReciver().equals(collaboratorDto.getReciver()))
 							throw new ReciverEmailofCollaborator(message.Reciver_Email_Already_Exist);
 					}
 					// save data into collaborator table

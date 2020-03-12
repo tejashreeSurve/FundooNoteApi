@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotesapi.services;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,11 +61,14 @@ public class NoteServiceImp implements INoteService {
 	@Autowired
 	LabelRepository labelRepository;
 	
+	@Autowired
+	ElasticSearchNoteService elasticSearch;
+	
 	private static final Logger LOGGER = Logger.getLogger(NoteServiceImp.class);
 
 	// Create New Note
 	@Override
-	public Response createNote(String token, NoteDto noteDto) {
+	public Response createNote(String token, NoteDto noteDto) throws Exception {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		// check whether user is present or not
@@ -73,6 +77,7 @@ public class NoteServiceImp implements INoteService {
 		NoteEntity noteData = mapper.map(noteDto, NoteEntity.class);
 		noteData.setUserEntity(user);
 		noteRepository.save(noteData);
+		elasticSearch.createNoteInElastic(noteData);
 		LOGGER.info("Note successfully created into Note table");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("note.create"), message.Note_Create);
@@ -120,7 +125,7 @@ public class NoteServiceImp implements INoteService {
 
 	// Get all Notes
 	@Override
-	public Response getAllNotes(String token)  {
+	public Response getAllNotes(String token) throws IOException {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		// check whether user is present or not
@@ -129,8 +134,9 @@ public class NoteServiceImp implements INoteService {
 		// check whether user has note or not
 		if (user.getNoteList() == null)
 			throw new NoteNotFoundException(message.Note_Not_Exist);
-		List<NoteEntity> allNotes = user.getNoteList().stream().filter(noteData -> !noteData.isTrash())
-				.collect(Collectors.toList());
+//		List<NoteEntity> allNotes = user.getNoteList().stream().filter(noteData -> !noteData.isTrash())
+//				.collect(Collectors.toList());
+		List<NoteEntity> allNotes = elasticSearch.getAllNote();
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("note.getallnotes"), allNotes);
 	}

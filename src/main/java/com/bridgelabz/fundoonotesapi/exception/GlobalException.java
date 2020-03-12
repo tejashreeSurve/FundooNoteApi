@@ -15,7 +15,7 @@ import com.bridgelabz.fundoonotesapi.response.Response;
  */
 @ControllerAdvice
 public class GlobalException {
-	Environment environment;
+
 	@Autowired
 	MessageInfo message;
 

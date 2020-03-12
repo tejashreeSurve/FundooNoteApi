@@ -12,10 +12,10 @@ import com.bridgelabz.fundoonotesapi.response.Response;
 public interface INoteService {
 
 	// create note
-	Response createNote(String token, NoteDto noteDto);
+	Response createNote(String token, NoteDto noteDto)throws Exception;
 
 	// get all note
-	Response getAllNotes(String token);
+	Response getAllNotes(String token)throws Exception;
 	
 	// get note by label id
 	Response getNoteByLabelId(String token, int labelId);

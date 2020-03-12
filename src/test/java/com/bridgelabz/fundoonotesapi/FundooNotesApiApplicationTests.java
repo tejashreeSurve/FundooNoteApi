@@ -36,7 +36,6 @@ class FundooNotesApiApplicationTests {
 		UserEntity user = new UserEntity();
 		user.setId(1);
 		user.setCity("mumbai");
-		user.setBirthdate("21/01/1998");
 		user.setEmail("tejutanvi773@gmail.com");
 		user.setFirstName("Tejashree");
 		user.setLastName("surve");

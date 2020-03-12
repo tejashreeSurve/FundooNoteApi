@@ -1,6 +1,8 @@
 package com.bridgelabz.fundoonotesapi.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -27,7 +29,7 @@ public class UserEntity {
 	private int id;
 	private String firstName;
 	private String lastName;
-	private String birthdate;
+	private LocalDate birthdate;
 	private String phoneNumber;
 	private String city;
 	private String email;
@@ -80,12 +82,12 @@ public class UserEntity {
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
 	}
-
-	public String getBirthdate() {
+	
+	public LocalDate getBirthdate() {
 		return birthdate;
 	}
 
-	public void setBirthdate(String birthdate) {
+	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
 	}
 

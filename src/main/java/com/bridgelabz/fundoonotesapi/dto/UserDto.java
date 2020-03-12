@@ -1,7 +1,13 @@
 package com.bridgelabz.fundoonotesapi.dto;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sun.istack.NotNull;
 
 /**
  * @author Tejashree Surve
@@ -12,9 +18,9 @@ public class UserDto {
 	private String firstName;
 	@NotEmpty
 	private String lastName;
-	@NotEmpty
-	@Pattern(regexp = "((([0]{1}[1-9]{1})|([1]{1}[0-9]{1})|([2]{1}[0-9]{1})|([3]{1}[0-1]{1}))/(([0]{1}[1-9]{1})|([1]{1}[0-2]{1}))/([1-9]{1}[0-9]{1}[0-9]{1}[1-9]{1}))", message = "Please Enter valide date")
-	private String birthdate;
+	@NotNull
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private LocalDate birthdate;
 	@NotEmpty
 	@Pattern(regexp = "^\\d{10}", message = "Please Enter valide Phone-Number")
 	private String phoneNumber;
@@ -22,11 +28,10 @@ public class UserDto {
 	@NotEmpty
 	private String city;
 	@NotEmpty
-	@Pattern(regexp = "\"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@\"\n"
-			+ "+ \"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$\"", message = "Please Enter valide Email")
+	@Pattern(regexp = "\\w+\\@\\w+\\.\\w+", message = "Please Enter valide Email")
 	private String email;
 	@NotEmpty
-	@Pattern(regexp = "(?=.*[0-9])", message = "Password must contain at least one numeric value")
+	@Pattern(regexp = "\\w+\\d+", message = "Password must contain at least one numeric value")
 	private String userPassword;
 
 	public String getFirstName() {
@@ -45,11 +50,11 @@ public class UserDto {
 		this.lastName = lastName;
 	}
 
-	public String getBirthdate() {
+	public LocalDate getBirthdate() {
 		return birthdate;
 	}
 
-	public void setBirthdate(String birthdate) {
+	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
 	}
 
