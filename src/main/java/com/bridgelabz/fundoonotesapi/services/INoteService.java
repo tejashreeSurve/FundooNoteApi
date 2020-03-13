@@ -1,6 +1,8 @@
 
 package com.bridgelabz.fundoonotesapi.services;
 
+import java.io.IOException;
+
 import com.bridgelabz.fundoonotesapi.dto.NoteDto;
 import com.bridgelabz.fundoonotesapi.response.Response;
 
@@ -12,20 +14,20 @@ import com.bridgelabz.fundoonotesapi.response.Response;
 public interface INoteService {
 
 	// create note
-	Response createNote(String token, NoteDto noteDto)throws Exception;
+	Response createNote(String token, NoteDto noteDto) throws Exception;
 
 	// get all note
-	Response getAllNotes(String token)throws Exception;
-	
+	Response getAllNotes(String token) throws Exception;
+
 	// get note by label id
 	Response getNoteByLabelId(String token, int labelId);
 
 	// update note
-	Response updateNote(String token, int noteId, NoteDto noteDto);
-	
+	Response updateNote(String token, int noteId, NoteDto noteDto) throws IOException;
+
 	// delete note
-	Response deleteNote(String token, int noteId);
-	
+	Response deleteNote(String token, int noteId) throws IOException;
+
 	// add label in note
 	Response addLabelInNote(String token, int noteId, int labelId);
 
@@ -40,7 +42,7 @@ public interface INoteService {
 
 	// sort user note by note title
 	Response sortByNoteTitle(String token);
-	
+
 	// sort user note by note description
 	Response sortByNoteDescription(String token);
 

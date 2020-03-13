@@ -1,4 +1,5 @@
 package com.bridgelabz.fundoonotesapi.exception;
+
 /**
  * @author Tejashree Surve
  * @Purpose : This is customize Exception.

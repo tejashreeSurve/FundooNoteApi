@@ -1,7 +1,6 @@
 package com.bridgelabz.fundoonotesapi.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;

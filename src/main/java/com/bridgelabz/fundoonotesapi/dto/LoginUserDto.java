@@ -7,10 +7,9 @@ import javax.validation.constraints.Pattern;
  * @Purpose : This is Data Transfer Object that holds Data for Login User Api's.
  */
 public class LoginUserDto {
-	@Pattern(regexp = "\"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@\"\n"
-			+ "+ \"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$\"", message = "Please Enter valide Email")
+	@Pattern(regexp = "\\w+\\@\\w+\\.\\w+", message = "Please Enter valide Email")
 	private String email;
-	@Pattern(regexp = "(?=.*[0-9])", message = "Password must contain at least one numeric value")
+	@Pattern(regexp = "\\w+\\d+", message = "Password must contain at least one numeric value")
 	private String userPassword;
 
 	public String getEmail() {

@@ -1,6 +1,10 @@
 package com.bridgelabz.fundoonotesapi.exception;
 
-public class CollaboratorNotExist extends RuntimeException{
+/**
+ * @author Tejashree Surve
+ * @Purpose : This is customize Exception.
+ */
+public class CollaboratorNotExist extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

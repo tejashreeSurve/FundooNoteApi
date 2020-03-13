@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Entity Class for Note DataBase.
+ * @Purpose : This is Entity Class for Note Entity.
  */
 @Entity
 @Component

@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoonotesapi.controller;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,8 @@ public class NoteController {
 
 	// Create New Note
 	@PostMapping("/createNote")
-	public ResponseEntity<Response> createNote(@RequestHeader String token, @RequestBody NoteDto notedto) throws Exception{
+	public ResponseEntity<Response> createNote(@RequestHeader String token, @RequestBody NoteDto notedto)
+			throws Exception {
 		Response response = noteService.createNote(token, notedto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
@@ -52,7 +55,7 @@ public class NoteController {
 
 	// Show All Note
 	@GetMapping("/getAllNotes")
-	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) throws Exception{
+	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) throws Exception {
 		Response response = noteService.getAllNotes(token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
@@ -67,14 +70,15 @@ public class NoteController {
 	// Update Note
 	@PutMapping("/updateNote/{noteId}")
 	public ResponseEntity<Response> updateNote(@RequestHeader String token, @PathVariable int noteId,
-			@RequestBody NoteDto notedto) {
+			@RequestBody NoteDto notedto) throws IOException {
 		Response response = noteService.updateNote(token, noteId, notedto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	// Delete Note
 	@DeleteMapping("/deleteNote/{noteId}")
-	public ResponseEntity<Response> deleteNote(@RequestHeader String token, @PathVariable int noteId) {
+	public ResponseEntity<Response> deleteNote(@RequestHeader String token, @PathVariable int noteId)
+			throws IOException {
 		Response response = noteService.deleteNote(token, noteId);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
@@ -119,7 +123,7 @@ public class NoteController {
 	// Add reminder to note
 	@PostMapping("/reminder/addReminder/{noteId}")
 	public ResponseEntity<Response> addReminder(@RequestHeader String token, @PathVariable int noteId,
-		@Valid	@RequestBody ReminderDto reminderDto) {
+			@Valid @RequestBody ReminderDto reminderDto) {
 		Response response = reminderService.addReminder(token, noteId, reminderDto);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}

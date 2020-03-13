@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Entity Class for Collaborator DataBase.
+ * @Purpose : This is Entity Class for Collaborator Entity.
  */
 @Component
 @Entity

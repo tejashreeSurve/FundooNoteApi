@@ -2,7 +2,6 @@ package com.bridgelabz.fundoonotesapi.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -16,8 +15,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Tejashree Surve
- * @Purpose : This is Data Access Object class which is connect to DataBase
- *          Layer.
+ * @Purpose : This is Entity Class for User Details Entity.
  */
 @Component
 @Entity

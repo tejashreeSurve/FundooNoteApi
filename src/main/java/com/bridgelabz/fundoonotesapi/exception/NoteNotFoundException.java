@@ -1,6 +1,10 @@
 package com.bridgelabz.fundoonotesapi.exception;
 
-public class NoteNotFoundException extends RuntimeException{
+/**
+ * @author Tejashree Surve
+ * @Purpose : This is customize Exception.
+ */
+public class NoteNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

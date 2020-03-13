@@ -8,8 +8,7 @@ import javax.validation.constraints.Pattern;
  *          EmailForgetPassword Api.
  */
 public class EmailForgetPasswordDto {
-	@Pattern(regexp = "\"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@\"\n"
-			+ "+ \"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$\"", message = "Please Enter valide Email")
+	@Pattern(regexp = "\\w+\\@\\w+\\.\\w+", message = "Please Enter valide Email")
 	private String email;
 
 	public String getEmail() {

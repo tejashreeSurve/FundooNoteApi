@@ -76,7 +76,9 @@ public class NoteServiceImp implements INoteService {
 			throw new LoginException(message.User_Not_Exist);
 		NoteEntity noteData = mapper.map(noteDto, NoteEntity.class);
 		noteData.setUserEntity(user);
+		// this save data into mysql database
 		noteRepository.save(noteData);
+		// this save data into elastic search non-sql database 
 		elasticSearch.createNoteInElastic(noteData);
 		LOGGER.info("Note successfully created into Note table");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
@@ -134,9 +136,11 @@ public class NoteServiceImp implements INoteService {
 		// check whether user has note or not
 		if (user.getNoteList() == null)
 			throw new NoteNotFoundException(message.Note_Not_Exist);
-//		List<NoteEntity> allNotes = user.getNoteList().stream().filter(noteData -> !noteData.isTrash())
-//				.collect(Collectors.toList());
-		List<NoteEntity> allNotes = elasticSearch.getAllNote();
+		// this stream get all notes from mysql database 
+		List<NoteEntity> allNotes = user.getNoteList().stream().filter(noteData -> !noteData.isTrash())
+				.collect(Collectors.toList());
+		// this list get all notes from elastic search 
+	//	List<NoteEntity> allNotes = elasticSearch.getAllNote();
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("note.getallnotes"), allNotes);
 	}
@@ -160,11 +164,11 @@ public class NoteServiceImp implements INoteService {
 
 	// Update Note
 	@Override
-	public Response updateNote(String token, int noteId, NoteDto noteDto) {
+	public Response updateNote(String token, int noteId, NoteDto noteDto) throws IOException {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		// check whether user is present or not
-		if (user == null)
+		if (user == null) 
 			throw new LoginException(message.User_Not_Exist);
 		// check whether note is present or not
 		NoteEntity noteData = noteRepository.findById(noteId)
@@ -174,7 +178,10 @@ public class NoteServiceImp implements INoteService {
 			throw new NoteNotFoundException(message.Note_Not_Exist_User);
 		noteData.setDescription(noteDto.getDescription());
 		noteData.setTitle(noteDto.getTitle());
+		// update note from mysql DataBase
 		noteRepository.save(noteData);
+		// update note using Elastic Search 
+		elasticSearch.updateNote(noteData);
 		LOGGER.info("Note is successfully update and saved in tabel");
 		return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 				environment.getProperty("note.update"), message.Note_Update);
@@ -182,7 +189,7 @@ public class NoteServiceImp implements INoteService {
 
 	// Delete Note
 	@Override
-	public Response deleteNote(String token, int noteId) {
+	public Response deleteNote(String token, int noteId) throws IOException {
 		String email = jwtOperation.getToken(token);
 		UserEntity user = userRepository.findByEmail(email);
 		// check whether user is present or not
@@ -197,6 +204,8 @@ public class NoteServiceImp implements INoteService {
 		// if isTrash is true then only it will delete note permanently else throw exception
 		if (noteData.isTrash() == true) {
 			noteRepository.deleteById(noteId);
+			// delete note using elastic search non-sql database 
+		//  elasticSearch.deletNote(String.valueOf(noteData.getId()));
 			LOGGER.info("Note is successfully deleted from Note table");
 			return new Response(Integer.parseInt(environment.getProperty("status.success.code")),
 					environment.getProperty("note.delete"), message.Note_Delete);

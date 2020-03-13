@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
  *          Api's.
  */
 public class ResetPasswordDto {
-	@Pattern(regexp = "(?=.*[0-9])", message = "Password must contain at least one numeric value")
+	@Pattern(regexp = "\\w+\\d+", message = "Password must contain at least one numeric value")
 	private String password;
 	private String confirmPassword;
 
