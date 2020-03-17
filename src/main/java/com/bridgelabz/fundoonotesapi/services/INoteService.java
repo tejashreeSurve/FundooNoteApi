@@ -45,5 +45,8 @@ public interface INoteService {
 
 	// sort user note by note description
 	Response sortByNoteDescription(String token);
+	
+	// search note using elastic search using note id
+	Response searchByNoteIdUsingElasticSearch (String id)  throws Exception ;
 
 }

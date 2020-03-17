@@ -118,6 +118,13 @@ public class NoteController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
+	// search note from elastic search using note id
+	@GetMapping("/noteInelasticSearch/{noteId}")
+	public ResponseEntity<Response> getNoteByIdUsingElasticSearch(@RequestHeader String noteId) throws Exception {
+		Response response = noteService.searchByNoteIdUsingElasticSearch(noteId);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
+
 	/******************************* Reminder Api's *******************************/
 
 	// Add reminder to note
